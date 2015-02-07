@@ -108,6 +108,12 @@ abstract class User implements ActiveRecordInterface
     protected $score;
 
     /**
+     * The value for the token field.
+     * @var        string
+     */
+    protected $token;
+
+    /**
      * @var        ObjectCollection|ChildPartnership[] Collection to store aggregation of ChildPartnership objects.
      */
     protected $collPartnershipsRelatedByUserId;
@@ -437,6 +443,16 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [token] column value.
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -577,6 +593,26 @@ abstract class User implements ActiveRecordInterface
     } // setScore()
 
     /**
+     * Set the value of [token] column.
+     *
+     * @param string $v new value
+     * @return $this|\User The current object (for fluent API support)
+     */
+    public function setToken($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->token !== $v) {
+            $this->token = $v;
+            $this->modifiedColumns[UserTableMap::COL_TOKEN] = true;
+        }
+
+        return $this;
+    } // setToken()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -635,6 +671,9 @@ abstract class User implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('Score', TableMap::TYPE_PHPNAME, $indexType)];
             $this->score = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('Token', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->token = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -643,7 +682,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\User'), 0, $e);
@@ -901,6 +940,9 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_SCORE)) {
             $modifiedColumns[':p' . $index++]  = 'score';
         }
+        if ($this->isColumnModified(UserTableMap::COL_TOKEN)) {
+            $modifiedColumns[':p' . $index++]  = 'token';
+        }
 
         $sql = sprintf(
             'INSERT INTO user (%s) VALUES (%s)',
@@ -932,6 +974,9 @@ abstract class User implements ActiveRecordInterface
                         break;
                     case 'score':
                         $stmt->bindValue($identifier, $this->score, PDO::PARAM_INT);
+                        break;
+                    case 'token':
+                        $stmt->bindValue($identifier, $this->token, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1016,6 +1061,9 @@ abstract class User implements ActiveRecordInterface
             case 6:
                 return $this->getScore();
                 break;
+            case 7:
+                return $this->getToken();
+                break;
             default:
                 return null;
                 break;
@@ -1053,6 +1101,7 @@ abstract class User implements ActiveRecordInterface
             $keys[4] => $this->getLastActive(),
             $keys[5] => $this->getEmail(),
             $keys[6] => $this->getScore(),
+            $keys[7] => $this->getToken(),
         );
 
         $utc = new \DateTimeZone('utc');
@@ -1153,6 +1202,9 @@ abstract class User implements ActiveRecordInterface
             case 6:
                 $this->setScore($value);
                 break;
+            case 7:
+                $this->setToken($value);
+                break;
         } // switch()
 
         return $this;
@@ -1199,6 +1251,9 @@ abstract class User implements ActiveRecordInterface
         }
         if (array_key_exists($keys[6], $arr)) {
             $this->setScore($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setToken($arr[$keys[7]]);
         }
     }
 
@@ -1261,6 +1316,9 @@ abstract class User implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserTableMap::COL_SCORE)) {
             $criteria->add(UserTableMap::COL_SCORE, $this->score);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_TOKEN)) {
+            $criteria->add(UserTableMap::COL_TOKEN, $this->token);
         }
 
         return $criteria;
@@ -1354,6 +1412,7 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setLastActive($this->getLastActive());
         $copyObj->setEmail($this->getEmail());
         $copyObj->setScore($this->getScore());
+        $copyObj->setToken($this->getToken());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1921,6 +1980,7 @@ abstract class User implements ActiveRecordInterface
         $this->last_active = null;
         $this->email = null;
         $this->score = null;
+        $this->token = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

@@ -18,6 +18,7 @@ CREATE TABLE `user`
     `last_active` DATETIME,
     `email` VARCHAR(255),
     `score` INTEGER,
+    `token` LONGTEXT,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 

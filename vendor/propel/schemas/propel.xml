@@ -6,7 +6,7 @@
                 <connection id="hophacks">
                     <adapter>mysql</adapter>
                     <classname>Propel\Runtime\Connection\ConnectionWrapper</classname>
-                    <dsn>mysql:host=localhost;dbname=my_db_name</dsn>
+                    <dsn>mysql:host=localhost;dbname=hophacks</dsn>
                     <user>root</user>
                     <password>hoyahaxa</password>
 
