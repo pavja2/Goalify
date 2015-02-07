@@ -11,3 +11,5 @@ $smarty = new Smarty();
 if(sizeof($_GET) < 1){
 	$smarty->display('signup.tpl');
 }
+
+?>
