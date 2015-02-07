@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 13:54:15
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 14:32:00
          compiled from "my_profile.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:131625464654d618bfd28f71-31799009%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '46364f3c1dee92ee14a8bd5d5053aa797cd611ab' => 
     array (
       0 => 'my_profile.tpl',
-      1 => 1423317243,
+      1 => 1423318157,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
@@ -40,7 +40,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </head>
 <body>
     
-    Currently Logged In!
+    
+<?php echo $_smarty_tpl->tpl_vars['username']->value;?>
+
+<?php echo $_smarty_tpl->tpl_vars['firstName']->value;?>
+
+<?php echo $_smarty_tpl->tpl_vars['lastName']->value;?>
+
 
 </body>
 <?php }} ?>
