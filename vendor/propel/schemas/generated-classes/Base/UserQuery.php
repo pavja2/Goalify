@@ -27,6 +27,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery orderByLastActive($order = Criteria::ASC) Order by the last_active column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildUserQuery orderByScore($order = Criteria::ASC) Order by the score column
+ * @method     ChildUserQuery orderByToken($order = Criteria::ASC) Order by the token column
  *
  * @method     ChildUserQuery groupById() Group by the id column
  * @method     ChildUserQuery groupByUsername() Group by the username column
@@ -35,6 +36,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery groupByLastActive() Group by the last_active column
  * @method     ChildUserQuery groupByEmail() Group by the email column
  * @method     ChildUserQuery groupByScore() Group by the score column
+ * @method     ChildUserQuery groupByToken() Group by the token column
  *
  * @method     ChildUserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -59,7 +61,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByLastName(string $last_name) Return the first ChildUser filtered by the last_name column
  * @method     ChildUser findOneByLastActive(string $last_active) Return the first ChildUser filtered by the last_active column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
- * @method     ChildUser findOneByScore(int $score) Return the first ChildUser filtered by the score column *
+ * @method     ChildUser findOneByScore(int $score) Return the first ChildUser filtered by the score column
+ * @method     ChildUser findOneByToken(string $token) Return the first ChildUser filtered by the token column *
 
  * @method     ChildUser requirePk($key, ConnectionInterface $con = null) Return the ChildUser by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOne(ConnectionInterface $con = null) Return the first ChildUser matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -71,6 +74,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser requireOneByLastActive(string $last_active) Return the first ChildUser filtered by the last_active column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByScore(int $score) Return the first ChildUser filtered by the score column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByToken(string $token) Return the first ChildUser filtered by the token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @method     ChildUser[]|ObjectCollection findById(int $id) Return ChildUser objects filtered by the id column
@@ -80,6 +84,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByLastActive(string $last_active) Return ChildUser objects filtered by the last_active column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
  * @method     ChildUser[]|ObjectCollection findByScore(int $score) Return ChildUser objects filtered by the score column
+ * @method     ChildUser[]|ObjectCollection findByToken(string $token) Return ChildUser objects filtered by the token column
  * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -172,7 +177,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, username, first_name, last_name, last_active, email, score FROM user WHERE id = :p0';
+        $sql = 'SELECT id, username, first_name, last_name, last_active, email, score, token FROM user WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -501,6 +506,35 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_SCORE, $score, $comparison);
+    }
+
+    /**
+     * Filter the query on the token column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByToken('fooValue');   // WHERE token = 'fooValue'
+     * $query->filterByToken('%fooValue%'); // WHERE token LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $token The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByToken($token = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($token)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $token)) {
+                $token = str_replace('*', '%', $token);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_TOKEN, $token, $comparison);
     }
 
     /**

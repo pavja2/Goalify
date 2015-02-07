@@ -14,6 +14,8 @@
 	 </column>
 	 <column name="score" type="INTEGER">
 	 </column>
+	<column name="token" type="CLOB">
+	</column>
    </table>
    <table name="partnership">
 	<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER">

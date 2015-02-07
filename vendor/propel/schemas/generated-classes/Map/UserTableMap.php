@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
@@ -107,6 +107,11 @@ class UserTableMap extends TableMap
     const COL_SCORE = 'user.score';
 
     /**
+     * the column name for the token field
+     */
+    const COL_TOKEN = 'user.token';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -118,11 +123,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Username', 'FirstName', 'LastName', 'LastActive', 'Email', 'Score', ),
-        self::TYPE_CAMELNAME     => array('id', 'username', 'firstName', 'lastName', 'lastActive', 'email', 'score', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_USERNAME, UserTableMap::COL_FIRST_NAME, UserTableMap::COL_LAST_NAME, UserTableMap::COL_LAST_ACTIVE, UserTableMap::COL_EMAIL, UserTableMap::COL_SCORE, ),
-        self::TYPE_FIELDNAME     => array('id', 'username', 'first_name', 'last_name', 'last_active', 'email', 'score', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'Username', 'FirstName', 'LastName', 'LastActive', 'Email', 'Score', 'Token', ),
+        self::TYPE_CAMELNAME     => array('id', 'username', 'firstName', 'lastName', 'lastActive', 'email', 'score', 'token', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_USERNAME, UserTableMap::COL_FIRST_NAME, UserTableMap::COL_LAST_NAME, UserTableMap::COL_LAST_ACTIVE, UserTableMap::COL_EMAIL, UserTableMap::COL_SCORE, UserTableMap::COL_TOKEN, ),
+        self::TYPE_FIELDNAME     => array('id', 'username', 'first_name', 'last_name', 'last_active', 'email', 'score', 'token', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -132,11 +137,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Username' => 1, 'FirstName' => 2, 'LastName' => 3, 'LastActive' => 4, 'Email' => 5, 'Score' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'username' => 1, 'firstName' => 2, 'lastName' => 3, 'lastActive' => 4, 'email' => 5, 'score' => 6, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_USERNAME => 1, UserTableMap::COL_FIRST_NAME => 2, UserTableMap::COL_LAST_NAME => 3, UserTableMap::COL_LAST_ACTIVE => 4, UserTableMap::COL_EMAIL => 5, UserTableMap::COL_SCORE => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'username' => 1, 'first_name' => 2, 'last_name' => 3, 'last_active' => 4, 'email' => 5, 'score' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Username' => 1, 'FirstName' => 2, 'LastName' => 3, 'LastActive' => 4, 'Email' => 5, 'Score' => 6, 'Token' => 7, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'username' => 1, 'firstName' => 2, 'lastName' => 3, 'lastActive' => 4, 'email' => 5, 'score' => 6, 'token' => 7, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_USERNAME => 1, UserTableMap::COL_FIRST_NAME => 2, UserTableMap::COL_LAST_NAME => 3, UserTableMap::COL_LAST_ACTIVE => 4, UserTableMap::COL_EMAIL => 5, UserTableMap::COL_SCORE => 6, UserTableMap::COL_TOKEN => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'username' => 1, 'first_name' => 2, 'last_name' => 3, 'last_active' => 4, 'email' => 5, 'score' => 6, 'token' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -163,6 +168,7 @@ class UserTableMap extends TableMap
         $this->addColumn('last_active', 'LastActive', 'TIMESTAMP', false, null, null);
         $this->addColumn('email', 'Email', 'VARCHAR', false, 255, null);
         $this->addColumn('score', 'Score', 'INTEGER', false, null, null);
+        $this->addColumn('token', 'Token', 'CLOB', false, null, null);
     } // initialize()
 
     /**
@@ -334,6 +340,7 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn(UserTableMap::COL_LAST_ACTIVE);
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
             $criteria->addSelectColumn(UserTableMap::COL_SCORE);
+            $criteria->addSelectColumn(UserTableMap::COL_TOKEN);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.username');
@@ -342,6 +349,7 @@ class UserTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.last_active');
             $criteria->addSelectColumn($alias . '.email');
             $criteria->addSelectColumn($alias . '.score');
+            $criteria->addSelectColumn($alias . '.token');
         }
     }
 

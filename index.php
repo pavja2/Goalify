@@ -6,11 +6,10 @@ require_once '/var/www/vendor/autoload.php';
 
 // setup Propel
 require_once '/var/www/vendor/propel/schemas/generated-conf/config.php';
-$user = new User();
-$user->setUserName('Name');
-$user->save();
-echo $user->getuserName();
 $smarty = new Smarty();
-$smarty->assign('name', 'Ned');
+if(!isset($_COOKIE['user_id'])){
 $smarty->display('index.tpl');
-?>
+}
+else{
+    $smarty->display('my_profile.tpl');
+}
