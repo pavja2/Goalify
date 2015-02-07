@@ -14,10 +14,6 @@
 		<input type="text" name="username" placeholder="Username">
 		<h4 id = "form">Email Address:</h4>
 		<input type="text" name="email_address" placeholder="Email Address">
-		<h4 id = "form">Password:</h4>
-		<input type="text" name="password" placeholder="Password">
-		<h4 id = "form">Reenter Password:</h4>
-		<input type="text" name="reenter_password" placeholder="Reenter Password">
 		<br>
 		<br>
 		<input type="submit" value="Submit">

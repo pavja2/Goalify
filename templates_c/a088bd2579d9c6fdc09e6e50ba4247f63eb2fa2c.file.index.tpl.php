@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 13:54:40
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 15:15:12
          compiled from "index.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:166951300654d57dcee51101-10735408%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
     array (
       0 => 'base.tpl',
-      1 => 1423317177,
+      1 => 1423320510,
       2 => 'file',
     ),
   ),
@@ -49,4 +49,4 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <button id="signin-button">Sign Up With Dropbox!</button>
 
 </body>
-<?php }} ?>
+ <?php }} ?>

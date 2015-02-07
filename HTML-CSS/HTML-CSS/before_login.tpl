@@ -9,4 +9,5 @@
 </head>
 <body>
 {block name = body}
+{/block}
 </body>

@@ -38,6 +38,7 @@
    <table name="campaign">
 		<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
 		<column name="user_id" type="INTEGER"/>
+		<column name="name" type="VARCHAR"/>
 		<column name="begin_date" type="DATE"/>
 		<column name="end_date" type="DATE" />
 		<column name="campaign_status_id" type="INTEGER"/>

@@ -22,6 +22,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildCampaignQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildCampaignQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildCampaignQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildCampaignQuery orderByBeginDate($order = Criteria::ASC) Order by the begin_date column
  * @method     ChildCampaignQuery orderByEndDate($order = Criteria::ASC) Order by the end_date column
  * @method     ChildCampaignQuery orderByCampaignStatusId($order = Criteria::ASC) Order by the campaign_status_id column
@@ -30,6 +31,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildCampaignQuery groupById() Group by the id column
  * @method     ChildCampaignQuery groupByUserId() Group by the user_id column
+ * @method     ChildCampaignQuery groupByName() Group by the name column
  * @method     ChildCampaignQuery groupByBeginDate() Group by the begin_date column
  * @method     ChildCampaignQuery groupByEndDate() Group by the end_date column
  * @method     ChildCampaignQuery groupByCampaignStatusId() Group by the campaign_status_id column
@@ -63,6 +65,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildCampaign findOneById(int $id) Return the first ChildCampaign filtered by the id column
  * @method     ChildCampaign findOneByUserId(int $user_id) Return the first ChildCampaign filtered by the user_id column
+ * @method     ChildCampaign findOneByName(string $name) Return the first ChildCampaign filtered by the name column
  * @method     ChildCampaign findOneByBeginDate(string $begin_date) Return the first ChildCampaign filtered by the begin_date column
  * @method     ChildCampaign findOneByEndDate(string $end_date) Return the first ChildCampaign filtered by the end_date column
  * @method     ChildCampaign findOneByCampaignStatusId(int $campaign_status_id) Return the first ChildCampaign filtered by the campaign_status_id column
@@ -74,6 +77,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildCampaign requireOneById(int $id) Return the first ChildCampaign filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCampaign requireOneByUserId(int $user_id) Return the first ChildCampaign filtered by the user_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildCampaign requireOneByName(string $name) Return the first ChildCampaign filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCampaign requireOneByBeginDate(string $begin_date) Return the first ChildCampaign filtered by the begin_date column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCampaign requireOneByEndDate(string $end_date) Return the first ChildCampaign filtered by the end_date column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCampaign requireOneByCampaignStatusId(int $campaign_status_id) Return the first ChildCampaign filtered by the campaign_status_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -83,6 +87,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCampaign[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCampaign objects based on current ModelCriteria
  * @method     ChildCampaign[]|ObjectCollection findById(int $id) Return ChildCampaign objects filtered by the id column
  * @method     ChildCampaign[]|ObjectCollection findByUserId(int $user_id) Return ChildCampaign objects filtered by the user_id column
+ * @method     ChildCampaign[]|ObjectCollection findByName(string $name) Return ChildCampaign objects filtered by the name column
  * @method     ChildCampaign[]|ObjectCollection findByBeginDate(string $begin_date) Return ChildCampaign objects filtered by the begin_date column
  * @method     ChildCampaign[]|ObjectCollection findByEndDate(string $end_date) Return ChildCampaign objects filtered by the end_date column
  * @method     ChildCampaign[]|ObjectCollection findByCampaignStatusId(int $campaign_status_id) Return ChildCampaign objects filtered by the campaign_status_id column
@@ -180,7 +185,7 @@ abstract class CampaignQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, user_id, begin_date, end_date, campaign_status_id, balance_id, activity_id FROM campaign WHERE id = :p0';
+        $sql = 'SELECT id, user_id, name, begin_date, end_date, campaign_status_id, balance_id, activity_id FROM campaign WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -350,6 +355,35 @@ abstract class CampaignQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CampaignTableMap::COL_USER_ID, $userId, $comparison);
+    }
+
+    /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCampaignQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CampaignTableMap::COL_NAME, $name, $comparison);
     }
 
     /**

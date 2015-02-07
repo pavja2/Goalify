@@ -16,5 +16,7 @@ else{
     $smarty->assign('username', $user->getUsername());
     $smarty->assign('firstName', $user->getFirstName());
     $smarty->assign('lastName', $user->getLastName());
+    $campaignQuery = CampaignQuery::create()->filterByUserId($user->getId())->find();
+    $smarty->assign('goalList', $campaignQuery);
     $smarty->display('my_profile.tpl');
 }

@@ -1,4 +1,4 @@
-{extends file = "base.tpl"}
+{extends file = "before_login.tpl"}
 {block name = "header"}
 {/block}
 {block name = "body"}

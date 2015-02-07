@@ -1,7 +1,8 @@
 body {
-	background-color: #F0F8FF;
+	background-color: #FFCD6A;
 }
 h1 {
+        font-variant: small-caps;
 	font-family: Helvetica, sans-serif;
 	color: #6495ED;
 	text-align: center;

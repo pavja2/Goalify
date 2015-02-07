@@ -59,7 +59,7 @@ class CampaignTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class CampaignTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
@@ -80,6 +80,11 @@ class CampaignTableMap extends TableMap
      * the column name for the user_id field
      */
     const COL_USER_ID = 'campaign.user_id';
+
+    /**
+     * the column name for the name field
+     */
+    const COL_NAME = 'campaign.name';
 
     /**
      * the column name for the begin_date field
@@ -118,11 +123,11 @@ class CampaignTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'UserId', 'BeginDate', 'EndDate', 'CampaignStatusId', 'BalanceId', 'ActivityId', ),
-        self::TYPE_CAMELNAME     => array('id', 'userId', 'beginDate', 'endDate', 'campaignStatusId', 'balanceId', 'activityId', ),
-        self::TYPE_COLNAME       => array(CampaignTableMap::COL_ID, CampaignTableMap::COL_USER_ID, CampaignTableMap::COL_BEGIN_DATE, CampaignTableMap::COL_END_DATE, CampaignTableMap::COL_CAMPAIGN_STATUS_ID, CampaignTableMap::COL_BALANCE_ID, CampaignTableMap::COL_ACTIVITY_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'user_id', 'begin_date', 'end_date', 'campaign_status_id', 'balance_id', 'activity_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'UserId', 'Name', 'BeginDate', 'EndDate', 'CampaignStatusId', 'BalanceId', 'ActivityId', ),
+        self::TYPE_CAMELNAME     => array('id', 'userId', 'name', 'beginDate', 'endDate', 'campaignStatusId', 'balanceId', 'activityId', ),
+        self::TYPE_COLNAME       => array(CampaignTableMap::COL_ID, CampaignTableMap::COL_USER_ID, CampaignTableMap::COL_NAME, CampaignTableMap::COL_BEGIN_DATE, CampaignTableMap::COL_END_DATE, CampaignTableMap::COL_CAMPAIGN_STATUS_ID, CampaignTableMap::COL_BALANCE_ID, CampaignTableMap::COL_ACTIVITY_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'user_id', 'name', 'begin_date', 'end_date', 'campaign_status_id', 'balance_id', 'activity_id', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -132,11 +137,11 @@ class CampaignTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'UserId' => 1, 'BeginDate' => 2, 'EndDate' => 3, 'CampaignStatusId' => 4, 'BalanceId' => 5, 'ActivityId' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'userId' => 1, 'beginDate' => 2, 'endDate' => 3, 'campaignStatusId' => 4, 'balanceId' => 5, 'activityId' => 6, ),
-        self::TYPE_COLNAME       => array(CampaignTableMap::COL_ID => 0, CampaignTableMap::COL_USER_ID => 1, CampaignTableMap::COL_BEGIN_DATE => 2, CampaignTableMap::COL_END_DATE => 3, CampaignTableMap::COL_CAMPAIGN_STATUS_ID => 4, CampaignTableMap::COL_BALANCE_ID => 5, CampaignTableMap::COL_ACTIVITY_ID => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'user_id' => 1, 'begin_date' => 2, 'end_date' => 3, 'campaign_status_id' => 4, 'balance_id' => 5, 'activity_id' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'UserId' => 1, 'Name' => 2, 'BeginDate' => 3, 'EndDate' => 4, 'CampaignStatusId' => 5, 'BalanceId' => 6, 'ActivityId' => 7, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'userId' => 1, 'name' => 2, 'beginDate' => 3, 'endDate' => 4, 'campaignStatusId' => 5, 'balanceId' => 6, 'activityId' => 7, ),
+        self::TYPE_COLNAME       => array(CampaignTableMap::COL_ID => 0, CampaignTableMap::COL_USER_ID => 1, CampaignTableMap::COL_NAME => 2, CampaignTableMap::COL_BEGIN_DATE => 3, CampaignTableMap::COL_END_DATE => 4, CampaignTableMap::COL_CAMPAIGN_STATUS_ID => 5, CampaignTableMap::COL_BALANCE_ID => 6, CampaignTableMap::COL_ACTIVITY_ID => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'user_id' => 1, 'name' => 2, 'begin_date' => 3, 'end_date' => 4, 'campaign_status_id' => 5, 'balance_id' => 6, 'activity_id' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -158,6 +163,7 @@ class CampaignTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('user_id', 'UserId', 'INTEGER', false, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 255, null);
         $this->addColumn('begin_date', 'BeginDate', 'DATE', false, null, null);
         $this->addColumn('end_date', 'EndDate', 'DATE', false, null, null);
         $this->addForeignKey('campaign_status_id', 'CampaignStatusId', 'INTEGER', 'campaign_status', 'id', false, null, null);
@@ -343,6 +349,7 @@ class CampaignTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(CampaignTableMap::COL_ID);
             $criteria->addSelectColumn(CampaignTableMap::COL_USER_ID);
+            $criteria->addSelectColumn(CampaignTableMap::COL_NAME);
             $criteria->addSelectColumn(CampaignTableMap::COL_BEGIN_DATE);
             $criteria->addSelectColumn(CampaignTableMap::COL_END_DATE);
             $criteria->addSelectColumn(CampaignTableMap::COL_CAMPAIGN_STATUS_ID);
@@ -351,6 +358,7 @@ class CampaignTableMap extends TableMap
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.user_id');
+            $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.begin_date');
             $criteria->addSelectColumn($alias . '.end_date');
             $criteria->addSelectColumn($alias . '.campaign_status_id');

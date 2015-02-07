@@ -59,6 +59,7 @@ CREATE TABLE `campaign`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER,
+    `name` VARCHAR(255),
     `begin_date` DATE,
     `end_date` DATE,
     `campaign_status_id` INTEGER,

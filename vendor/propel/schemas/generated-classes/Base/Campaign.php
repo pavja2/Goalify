@@ -84,6 +84,12 @@ abstract class Campaign implements ActiveRecordInterface
     protected $user_id;
 
     /**
+     * The value for the name field.
+     * @var        string
+     */
+    protected $name;
+
+    /**
      * The value for the begin_date field.
      * @var        \DateTime
      */
@@ -386,6 +392,16 @@ abstract class Campaign implements ActiveRecordInterface
     }
 
     /**
+     * Get the [name] column value.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [begin_date] column value.
      *
      *
@@ -494,6 +510,26 @@ abstract class Campaign implements ActiveRecordInterface
 
         return $this;
     } // setUserId()
+
+    /**
+     * Set the value of [name] column.
+     *
+     * @param string $v new value
+     * @return $this|\Campaign The current object (for fluent API support)
+     */
+    public function setName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[CampaignTableMap::COL_NAME] = true;
+        }
+
+        return $this;
+    } // setName()
 
     /**
      * Sets the value of [begin_date] column to a normalized version of the date/time value specified.
@@ -649,25 +685,28 @@ abstract class Campaign implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CampaignTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CampaignTableMap::translateFieldName('BeginDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CampaignTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CampaignTableMap::translateFieldName('BeginDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->begin_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CampaignTableMap::translateFieldName('EndDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CampaignTableMap::translateFieldName('EndDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->end_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CampaignTableMap::translateFieldName('CampaignStatusId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CampaignTableMap::translateFieldName('CampaignStatusId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->campaign_status_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CampaignTableMap::translateFieldName('BalanceId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CampaignTableMap::translateFieldName('BalanceId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->balance_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CampaignTableMap::translateFieldName('ActivityId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CampaignTableMap::translateFieldName('ActivityId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->activity_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -677,7 +716,7 @@ abstract class Campaign implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = CampaignTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = CampaignTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Campaign'), 0, $e);
@@ -938,6 +977,9 @@ abstract class Campaign implements ActiveRecordInterface
         if ($this->isColumnModified(CampaignTableMap::COL_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'user_id';
         }
+        if ($this->isColumnModified(CampaignTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'name';
+        }
         if ($this->isColumnModified(CampaignTableMap::COL_BEGIN_DATE)) {
             $modifiedColumns[':p' . $index++]  = 'begin_date';
         }
@@ -969,6 +1011,9 @@ abstract class Campaign implements ActiveRecordInterface
                         break;
                     case 'user_id':
                         $stmt->bindValue($identifier, $this->user_id, PDO::PARAM_INT);
+                        break;
+                    case 'name':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case 'begin_date':
                         $stmt->bindValue($identifier, $this->begin_date ? $this->begin_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1054,18 +1099,21 @@ abstract class Campaign implements ActiveRecordInterface
                 return $this->getUserId();
                 break;
             case 2:
-                return $this->getBeginDate();
+                return $this->getName();
                 break;
             case 3:
-                return $this->getEndDate();
+                return $this->getBeginDate();
                 break;
             case 4:
-                return $this->getCampaignStatusId();
+                return $this->getEndDate();
                 break;
             case 5:
-                return $this->getBalanceId();
+                return $this->getCampaignStatusId();
                 break;
             case 6:
+                return $this->getBalanceId();
+                break;
+            case 7:
                 return $this->getActivityId();
                 break;
             default:
@@ -1100,24 +1148,25 @@ abstract class Campaign implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getUserId(),
-            $keys[2] => $this->getBeginDate(),
-            $keys[3] => $this->getEndDate(),
-            $keys[4] => $this->getCampaignStatusId(),
-            $keys[5] => $this->getBalanceId(),
-            $keys[6] => $this->getActivityId(),
+            $keys[2] => $this->getName(),
+            $keys[3] => $this->getBeginDate(),
+            $keys[4] => $this->getEndDate(),
+            $keys[5] => $this->getCampaignStatusId(),
+            $keys[6] => $this->getBalanceId(),
+            $keys[7] => $this->getActivityId(),
         );
 
         $utc = new \DateTimeZone('utc');
-        if ($result[$keys[2]] instanceof \DateTime) {
-            // When changing timezone we don't want to change existing instances
-            $dateTime = clone $result[$keys[2]];
-            $result[$keys[2]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
-        }
-
         if ($result[$keys[3]] instanceof \DateTime) {
             // When changing timezone we don't want to change existing instances
             $dateTime = clone $result[$keys[3]];
             $result[$keys[3]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
+        }
+
+        if ($result[$keys[4]] instanceof \DateTime) {
+            // When changing timezone we don't want to change existing instances
+            $dateTime = clone $result[$keys[4]];
+            $result[$keys[4]] = $dateTime->setTimezone($utc)->format('Y-m-d\TH:i:s\Z');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1227,18 +1276,21 @@ abstract class Campaign implements ActiveRecordInterface
                 $this->setUserId($value);
                 break;
             case 2:
-                $this->setBeginDate($value);
+                $this->setName($value);
                 break;
             case 3:
-                $this->setEndDate($value);
+                $this->setBeginDate($value);
                 break;
             case 4:
-                $this->setCampaignStatusId($value);
+                $this->setEndDate($value);
                 break;
             case 5:
-                $this->setBalanceId($value);
+                $this->setCampaignStatusId($value);
                 break;
             case 6:
+                $this->setBalanceId($value);
+                break;
+            case 7:
                 $this->setActivityId($value);
                 break;
         } // switch()
@@ -1274,19 +1326,22 @@ abstract class Campaign implements ActiveRecordInterface
             $this->setUserId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setBeginDate($arr[$keys[2]]);
+            $this->setName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setEndDate($arr[$keys[3]]);
+            $this->setBeginDate($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCampaignStatusId($arr[$keys[4]]);
+            $this->setEndDate($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setBalanceId($arr[$keys[5]]);
+            $this->setCampaignStatusId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setActivityId($arr[$keys[6]]);
+            $this->setBalanceId($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setActivityId($arr[$keys[7]]);
         }
     }
 
@@ -1334,6 +1389,9 @@ abstract class Campaign implements ActiveRecordInterface
         }
         if ($this->isColumnModified(CampaignTableMap::COL_USER_ID)) {
             $criteria->add(CampaignTableMap::COL_USER_ID, $this->user_id);
+        }
+        if ($this->isColumnModified(CampaignTableMap::COL_NAME)) {
+            $criteria->add(CampaignTableMap::COL_NAME, $this->name);
         }
         if ($this->isColumnModified(CampaignTableMap::COL_BEGIN_DATE)) {
             $criteria->add(CampaignTableMap::COL_BEGIN_DATE, $this->begin_date);
@@ -1437,6 +1495,7 @@ abstract class Campaign implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setUserId($this->getUserId());
+        $copyObj->setName($this->getName());
         $copyObj->setBeginDate($this->getBeginDate());
         $copyObj->setEndDate($this->getEndDate());
         $copyObj->setCampaignStatusId($this->getCampaignStatusId());
@@ -1939,6 +1998,7 @@ abstract class Campaign implements ActiveRecordInterface
         }
         $this->id = null;
         $this->user_id = null;
+        $this->name = null;
         $this->begin_date = null;
         $this->end_date = null;
         $this->campaign_status_id = null;
