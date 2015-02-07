@@ -8,7 +8,7 @@ require_once '/var/www/vendor/autoload.php';
 require_once '/var/www/vendor/propel/schemas/generated-conf/config.php';
 $smarty = new Smarty();
 
-if(sizeof($_GET) > 0){
+if(sizeof($_GET) < 1){
 	$smarty->display('signup.tpl');
 }
 else{
