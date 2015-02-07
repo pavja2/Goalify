@@ -2,14 +2,17 @@ body {
 	background-color: #F0F8FF;
 }
 h1 {
-	color: #6495ED;
+        font-family: "Book Antiqua", Palatino, Serif;
+        font-variant: small-caps;
+        color: #6495ED;
 	text-align: center;
 	font-size: 100px;
 	padding-bottom: 0px;
 	margin-bottom: 0px;
 }
 h2 {
-	color: #008B8B;
+        font-family: "Book Antiqua", Palatino, Serif;
+        color: #008B8B;
 	text-align: center;
 	font-size: 40px;
 	font-style: italic;
@@ -19,6 +22,7 @@ h2 {
 	margin-bottom: 0px;
 }
 h3 {
+        font-family: "Book Antiqua", Palatino, Serif;
 	color: #FF7F50; 
 	text-align: center;
 	font-size: 40px;
@@ -26,6 +30,7 @@ h3 {
 	margin: 0px;
 }
 h4 {
+        font-family: "Book Antiqua", Palatino, Serif;
 	font-size: 20px;
 	color: #008B8B;
 	padding: 0px 0px 0px 25px;
