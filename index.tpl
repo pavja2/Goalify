@@ -1,7 +1,4 @@
   {extends file="base.tpl"}
-  <head>
-    <title>Smarty</title>
-  </head>
-  <body>
-    Hello, {$name}!
-  </body>
+{block name=body}
+    Hello, {$name}
+{/block}
