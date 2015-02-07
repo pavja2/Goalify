@@ -9,8 +9,7 @@ require_once '/var/www/vendor/propel/schemas/generated-conf/config.php';
 $user = new User();
 $user->setUserName('Name');
 $user->save();
-
-
+echo $user->getName();
 $smarty = new Smarty();
 $smarty->assign('name', 'Ned');
 $smarty->display('index.tpl');
