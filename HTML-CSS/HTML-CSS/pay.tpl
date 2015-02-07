@@ -2,5 +2,5 @@
 {block name = "header"}
 {/block}
 {block name = "body"}
-	<h3>Log Out</h3> 
+	<h3>Pay</h3> 
 {/block}

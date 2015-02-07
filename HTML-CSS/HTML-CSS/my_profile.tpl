@@ -2,7 +2,7 @@
 {block name = "header"}
 {/block}
 {block name = "body"}
-	<h3>[name]</h3> 
+	<h3>{$NAME}</h3> 
 	<h4><a href = goals.html>Goals</a></h4>
 	<ul>
 		<li><h5>In Progress</h5></li>

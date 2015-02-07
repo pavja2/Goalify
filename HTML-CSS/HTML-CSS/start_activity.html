@@ -30,4 +30,5 @@
       </form>
 	</ol>
   <input type="submit" value="Submit">
+</body>
 {/block}
