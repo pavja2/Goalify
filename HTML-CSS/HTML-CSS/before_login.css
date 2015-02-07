@@ -2,19 +2,18 @@ body {
 	background-color: #F0F8FF;
 }
 h1 {
-        font-family: "Book Antiqua", Palatino, Serif;
-        font-variant: small-caps;
-        color: #6495ED;
+	font-family: Helvetica, sans-serif;
+	color: #6495ED;
 	text-align: center;
 	font-size: 100px;
 	padding-bottom: 0px;
 	margin-bottom: 0px;
 }
 h2 {
-        font-family: "Book Antiqua", Palatino, Serif;
-        color: #008B8B;
+	font-family: Helvetica, sans-serif;
+	color: #008B8B;
 	text-align: center;
-	font-size: 40px;
+	font-size: 30px;
 	font-style: italic;
 	padding-top: 0px;
 	margin-top: 0px;
@@ -22,7 +21,7 @@ h2 {
 	margin-bottom: 0px;
 }
 h3 {
-        font-family: "Book Antiqua", Palatino, Serif;
+	font-family: Helvetica, sans-serif;
 	color: #FF7F50; 
 	text-align: center;
 	font-size: 40px;
@@ -30,18 +29,20 @@ h3 {
 	margin: 0px;
 }
 h4 {
-        font-family: "Book Antiqua", Palatino, Serif;
+	font-family: Helvetica, sans-serif;
 	font-size: 20px;
 	color: #008B8B;
 	padding: 0px 0px 0px 25px;
 	margin: 0px;
 }
 p {
+	font-family: Helvetica, sans-serif;
 	color: #6495ED;
 	font-size: 20px;
 	margin: 0px;
 }
 ul li {
+	font-family: Helvetica, sans-serif;
 	color: #008B8B;
 	list-style: none;
 	font-size: 20px;
@@ -49,19 +50,21 @@ ul li {
 	margin: 0px;
 }
 ol li {
+	font-family: Helvetica, sans-serif;
 	color: #008B8B;
 	list-style: none;
 	font-size: 20px;
 	padding: 0px;
 	margin: 0px;
-}
+	}
 ul#navigation li{
 	display: inline;
 	text-align: right;
 	font-size: 20px;
 	margin-right: 50px;
-}
+	}
 a {
+	font-family: Helvetica, sans-serif;
 	color: 9370DB; 
 	text-decoration: none;
 }

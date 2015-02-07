@@ -2,5 +2,6 @@
 {block name = "header"}
 {/block}
 {block name = "body"}
-	<h3>Log Out</h3> 
+	<p>You are now logged out!</p>
+	<p>Come back soon!</p>
 {/block}

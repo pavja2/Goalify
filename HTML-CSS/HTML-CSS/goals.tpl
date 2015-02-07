@@ -1,0 +1,51 @@
+{extends file = "base.tpl"}
+{block name = "header"}
+{/block}
+{block name = "body"}
+	<h3>Goals</h3> 
+	<h4>In Progress</h4>
+	<ol>
+		<li>
+			<h5>{$GOAL1}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+		<li>
+			<h5>{$GOAL2}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+		<li>
+			<h5>{$CONTINUED}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+	</ol>
+	<h4>Completed</h4>
+	<ol>
+		<li>
+			<h5>{$GOAL1}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+		<li>
+			<h5>{$GOAL2}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+		<li>
+			<h5>{$CONTINUED}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+	</ol>
+	<h4>Expired</h4>
+	<ol>
+		<li>
+			<h5>{$GOAL1}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+		<li>
+			<h5>{$GOAL1}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+		<li>
+			<h5>{$CONTINUED}</h5>
+			<p>{$DESCRIPTION}</p>
+		</li>
+	</ol>
+{/block}
