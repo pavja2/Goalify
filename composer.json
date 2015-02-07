@@ -1,0 +1,4 @@
+{
+"require":{
+	"propel/propel" : "~2.00@dev"
+}}

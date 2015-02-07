@@ -1,0 +1,67 @@
+<database name="hophacks" defaultIdMethod="native">
+   <table name="user">
+     <column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER">
+     </column>
+	 <column name="username" type="VARCHAR">
+	 </column>
+	 <column name="first_name" type="VARCHAR">
+	 </column>
+	 <column name="last_name" type="VARCHAR">
+	 </column>
+	 <column name="last_active" type="TIMESTAMP">
+	 </column>
+	 <column name="email" type="VARCHAR">
+	 </column>
+	 <column name="score" type="INTEGER">
+	 </column>
+   </table>
+   <table name="partnership">
+	<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER">
+	</column>
+	<column name="user_id" type="INTEGER">
+	</column>
+	<column name="partner_id" type="INTEGER">
+	</column>
+	<column name="campaign_id" type="INTEGER"/>
+	<foreign-key foreignTable="user">
+		<reference local="user_id" foreign="id"/>
+	</foreign-key>
+	<foreign-key foreignTable="user">
+		<reference local="partner_id" foreign="id"/>
+	</foreign-key>
+	<foreign-key foreignTable="campaign">
+		<reference local="campaign_id" foreign="id"/>
+	</foreign-key>
+   </table>
+   <table name="campaign">
+		<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
+		<column name="user_id" type="INTEGER"/>
+		<column name="begin_date" type="DATE"/>
+		<column name="end_date" type="DATE" />
+		<column name="campaign_status_id" type="INTEGER"/>
+		<column name="balance_id" type="INTEGER"/>
+		<column name="activity_id" type="INTEGER"/>
+		<foreign-key foreignTable="campaign_status">
+			<reference local="campaign_status_id" foreign="id"/>
+		</foreign-key>
+		<foreign-key foreignTable="balance">
+			<reference local="balance_id" foreign="id" />
+		</foreign-key>
+		<foreign-key foreignTable="activity">
+			<reference local="activity_id" foreign="id" />
+		</foreign-key>
+   </table>
+   <table name="campaign_status">
+		<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
+		<column name="status" type="VARCHAR"/>
+   </table>
+   <table name="balance">
+		<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
+		<column name="amount" type="DOUBLE"/>
+		<column name="payment_info" type="CLOB"/>
+   </table>
+   <table name="activity">
+   		<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
+		<column name="name" type="VARCHAR"/>
+   </table>
+</database>

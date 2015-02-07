@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<config>
+    <propel>
+        <database>
+            <connections>
+                <connection id="hophacks">
+                    <adapter>mysql</adapter>
+                    <classname>Propel\Runtime\Connection\ConnectionWrapper</classname>
+                    <dsn>mysql:host=localhost;dbname=my_db_name</dsn>
+                    <user>root</user>
+                    <password>hoyahaxa</password>
+
+                </connection>
+            </connections>
+        </database>
+        <runtime>
+            <defaultConnection>hophacks</defaultConnection>
+            <connection>hophacks</connection>
+        </runtime>
+        <generator>
+            <defaultConnection>hophacks</defaultConnection>
+            <connection>hophacks</connection>
+        </generator>
+    </propel>
+</config>
