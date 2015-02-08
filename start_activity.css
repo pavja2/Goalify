@@ -1,0 +1,20 @@
+.opening {
+	padding-top: 20px;
+	text-align: center;
+}
+.activity {
+	margin:20px 0px 20px 0px;
+	padding:0px;
+	font-size: 50px;
+}
+.subheader {
+	margin-bottom: 20px;
+}
+#date {
+	margin-top: 20px;
+	margin-bottom:0px;
+}
+input#enddate {
+margin-top: 0px;
+padding-top: 0px;
+}

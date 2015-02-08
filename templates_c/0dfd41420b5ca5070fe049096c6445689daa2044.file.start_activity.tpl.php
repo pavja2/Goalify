@@ -1,13 +1,13 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 06:48:58
-         compiled from "signup.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:189747239654d5c81d9cc171-14985376%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 07:03:23
+         compiled from "start_activity.tpl" */ ?>
+<?php /*%%SmartyHeaderCode:36405789854d68623ba5f45-12162354%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
-    '6a0a5df949d4ed593cad32855f91331bbbada34e' => 
+    '0dfd41420b5ca5070fe049096c6445689daa2044' => 
     array (
-      0 => 'signup.tpl',
-      1 => 1423375280,
+      0 => 'start_activity.tpl',
+      1 => 1423379000,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
@@ -17,15 +17,15 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '189747239654d5c81d9cc171-14985376',
+  'nocache_hash' => '36405789854d68623ba5f45-12162354',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.21-dev',
-  'unifunc' => 'content_54d5c81dc6d9f2_56099209',
+  'unifunc' => 'content_54d68623c07956_08127716',
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_54d5c81dc6d9f2_56099209')) {function content_54d5c81dc6d9f2_56099209($_smarty_tpl) {?><head>
+<?php if ($_valid && !is_callable('content_54d68623c07956_08127716')) {function content_54d68623c07956_08127716($_smarty_tpl) {?><head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -49,11 +49,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
  src="https://www.dropbox.com/static/api/dropbox-datastores-1.2-latest.js" type="text/javascript"><?php echo '</script'; ?>
 >
     
-    <?php echo '<script'; ?>
- src="purl.js" type="text/javascript"><?php echo '</script'; ?>
->
-    <?php echo '<script'; ?>
- src="signup.js" type="text/javascript"><?php echo '</script'; ?>
+	<?php echo '<script'; ?>
+ src="start_activity.js" type="text/javascript"><?php echo '</script'; ?>
 >
 
 </head>
@@ -88,22 +85,41 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <br>
 
     
-    <label for="first_name">First Name:</label>
-    <input id="first_name"></input>
-    <br>
-    <label for="last_name">Last Name:</label>
-    <input id="last_name"></input>
-    <br>
-    <label for="user_name">User Name:</label>
-    <input id="user_name"></input>
-    <br>
-    <label for="email">Email:</label>
-    <input id="email"></input>
-    <br>
-    <label for="email_confirm">Confirm Email</label>
-    <input id="email_confirm"></input>
-    <br>
-    <button id="register-button">Complete Registration</button>
+	<h3>Start An Activity!</h3>
+<br>
+<br>
+<div style="text-align: center;">
+    <h4 id = "opening"> Congratulations! You're at the first step of doing something great!</h4>
+    <h4 id = "opening"> Please fill out this form with a goal that you would like to achieve. </h4>
+</div>
+	<ol>
+<br>
+<br>
+		<li>
+<div class="boxed">
+			<h4 id = "form">Activity Description:</h4>
+			<p>Goals must be SMART: specific, measurable, attainable, relevant, and timely.</p>
+			<input type="text" name="description" size= "80" placeholder="e.g., Do 11 pushups for 7 days">
+<br>
+</div>
+		</li>
+<br>
+<br>
+		<li>
+<div class="boxed">
+			<h4 id="enddate">Pick Date To Accomplish Activity By:</h4>
+			<input type="date"  name="enddate">
+		</li>
+</div>
+<br>
+<br>
+		<li>
+			<h4 id = "form">Charity:</h4>
+			<input type="radio" name="charities" value="unicef">UNICEF
+            <br>
+		</li>
+	</ol>
+  <button id="submit"> Submit</button>
 
 </body>
 <?php }} ?>

@@ -17,25 +17,6 @@
 <link href='http://fonts.googleapis.com/css?family=Dosis:300' rel='stylesheet' type='text/css'>
     <link rel = "stylesheet" type = "text/css" href = "base.css">
 
-<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
-  <div class="container">
-    <div class="navbar-header">
-      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
-      <ul class="nav navbar-nav">
-            <li> <a href = index.php>My Profile</a></li>
-            <li><a href = initiate_activity.php>Start An Activity</a></li>
-            <li><a href = partnerships.php>Partnerships</a></li>
-            <li><a href = log_out.php>Log Out</a></li>  
-	        </ul>
-    </nav>
-  </div>
-</header>
 
 <br>
     <h1><img src="Goalify.png" src="Bet on yourself!"></h1>

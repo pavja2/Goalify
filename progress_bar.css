@@ -1,0 +1,22 @@
+#progressBar {
+    width: 400px;
+    height: 22px;
+    border: 1px solid #111;
+    background-color: #771310;
+}
+
+#progressBar div {
+    height: 100%;
+    color: #FFFFFF;
+    text-align: right;
+    line-height: 22px;
+    width: 0;
+    background-color: #080808;
+}
+
+
+
+function progress(percent, $element) {
+    var progressBarWidth = percent * $element.width() / 100;
+    $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "%&nbsp;");
+}

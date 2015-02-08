@@ -32,7 +32,7 @@ h4 {
         font-family: "Dosis", sans-serif;
 	font-size: 20px;
 	color: #008B8B;
-	padding: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 25px;
 	margin: 0px;
 }
 p {
@@ -75,12 +75,11 @@ a:hover {
       background-color: rgba(76, 184, 184, 0.4);
       border-radius: 15px;
       margin: 0px 50px 0px 0px;
-      padding: 15px
+      padding: 15px;
 }
 .wrapper {
       text-align: center;
 }
-
 
 .navbar-inverse { background-color: #4CB8B8}
 .navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus { background-color: #6F9292}
