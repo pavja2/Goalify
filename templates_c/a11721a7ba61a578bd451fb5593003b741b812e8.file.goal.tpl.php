@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 22:15:17
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 11:15:45
          compiled from "goal.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:167454322154d649c25bc486-02348190%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a11721a7ba61a578bd451fb5593003b741b812e8' => 
     array (
       0 => 'goal.tpl',
-      1 => 1423333333,
+      1 => 1423394140,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
     array (
       0 => 'base.tpl',
-      1 => 1423346032,
+      1 => 1423393389,
       2 => 'file',
     ),
   ),
@@ -45,39 +45,63 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <?php echo '<script'; ?>
  src="jquery.cookie.js" type="text/javascript"><?php echo '</script'; ?>
 >
+    <?php echo '<script'; ?>
+ src="https://www.dropbox.com/static/api/dropbox-datastores-1.2-latest.js" type="text/javascript"><?php echo '</script'; ?>
+>
     
 
 </head>
 <body>
+<link href='http://fonts.googleapis.com/css?family=Dosis:300' rel='stylesheet' type='text/css'>
     <link rel = "stylesheet" type = "text/css" href = "base.css">
+
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+            <li> <a href = index.php>My Profile</a></li>
+            <li><a href = create_activity.php>Start An Activity</a></li>
+            <li><a href = partnerships.php>Partnerships</a></li>
+            <li><a href = log_out.php>Log Out</a></li>  
+	        </ul>
+    </nav>
+  </div>
+</header>
+
+<br>
+<br>
     <h1><img src="Goalify.png" src="Bet on yourself!"></h1>
     <h2>Bet on yourself!</h2>
-    <nav class="navbar navbar-default navbar-static-top">
-        <ul id = "navigation">
-            <li> <a href = my_profile.php>My Profile</a></li>
-            <li><a href = initiate_activity.php>Start An Activity</a></li>
-            <li><a href = partnerships.php>Partnerships</a></li>
-            <li><a href = log_out.php>Log Out</a></li>
-        </ul>
-    </nav>
+<br>
+<br>
+
     
-	<h3><?php echo $_smarty_tpl->tpl_vars['goal']->value->getName();?>
+	<div id="goal_info_div">
+            <h3><?php echo $_smarty_tpl->tpl_vars['goal']->value->getName();?>
 </h3>
-	<h4>Start Date: </h4>
-	<h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getBeginDate()->format('Y-m-d');?>
+            <h4>Start Date: </h4>
+            <h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getBeginDate()->format('Y-m-d');?>
 </h4>
-	<br>
-	<h4>End Date: </h4>
-	<h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getEndDate()->format('Y-m-d');?>
+            <br>
+            <h4>End Date: </h4>
+            <h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getEndDate()->format('Y-m-d');?>
 </h4>
-	<br>
-	<h4>Campaign Status: </h4>
-	<h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getCampaignStatus()->getStatus();?>
+            <br>
+            <h4>Campaign Status: </h4>
+            <h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getCampaignStatus()->getStatus();?>
 </h4>
-	<br>
-	<h4>Balance: </h4>
-	<h4><?php echo strval($_smarty_tpl->tpl_vars['goal']->value->getBalance()->getAmount());?>
+            <br>
+            <h4>Balance: </h4>
+            <h4>$<?php echo $_smarty_tpl->tpl_vars['balance']->value->getAmount();?>
 </h4>
+        </div>
 
 </body>
 <?php }} ?>

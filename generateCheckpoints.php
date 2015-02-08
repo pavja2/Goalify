@@ -30,15 +30,15 @@ function getDateForSpecificDayBetweenDates($startDate, $endDate, $weekdayNumber)
     return($dateArr);
 }
 $campaignId = $_GET["campaign_id"];
-$startDate = strtotime($_GET["start_date"]);
-$endDate = strtotime($_GET["end_date"]);
+$startDate = $_GET["start_date"];
+$endDate = $_GET["end_date"];
 $dayofweek = date('w', strtotime($_GET["start_date"]));
 $campaignQuery = new CampaignQuery();
 $campaign = $campaignQuery->findPK($campaignId);
 $dateArr = getDateForSpecificDayBetweenDates($_GET["start_date"], $_GET["end_date"], $dayofweek);
 foreach ($dateArr as $date) {
     $checkpoint = new Checkpoint();
-    $checkpoint->setCampaignId($campaignId);
+    $checkpoint->setCampaign($campaign);
     $checkpoint->setDate($date);
     $checkpoint->setCompleted(false);
     $checkpoint->save();

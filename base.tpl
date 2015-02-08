@@ -29,7 +29,7 @@
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
       <ul class="nav navbar-nav">
             <li> <a href = index.php>My Profile</a></li>
-            <li><a href = initiate_activity.php>Start An Activity</a></li>
+            <li><a href = create_activity.php>Start An Activity</a></li>
             <li><a href = partnerships.php>Partnerships</a></li>
             <li><a href = log_out.php>Log Out</a></li>  
 	        </ul>

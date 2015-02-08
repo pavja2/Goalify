@@ -9,7 +9,7 @@ require_once '/var/www/vendor/propel/schemas/generated-conf/config.php';
 $smarty = new Smarty();
 if(!isset($_COOKIE['user_id'])){
 $smarty->display('index.tpl');
-} 
+}
 else{
     $userQuery = new UserQuery();
     $user = $userQuery->findPK($_COOKIE['user_id']);

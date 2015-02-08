@@ -1,13 +1,13 @@
 {extends file="base.tpl"}
 {block head}{/block}
 {block body}
-<form action="" method="POST">
+<form action="balance.php" method="POST">
   <script
     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
     data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
-    data-amount="2000"
+    data-amount=""
     data-name="Demo Site"
-    data-description="2 widgets ($20.00)"
+    data-description=""
     data-image="/128x128.png">
   </script>
 </form>

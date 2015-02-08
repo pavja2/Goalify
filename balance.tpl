@@ -1,6 +1,6 @@
 {extends file='base.tpl'}
 {block name = "header"}
-        <script src="balance.js" type="text/javascript"></script>
+<script src="balance.js" type="text/javascript"></script>
 {/block}
 {block name = 'body'}
         
@@ -24,10 +24,17 @@
        <div class="form-group">
 			<label for="payment_info" class="col-sm-2 control-label">Payment Information:</label>
 			<input id="payment_info"></input> 
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+    data-amount=""
+    data-name="Demo Site"
+    data-description=""
+    data-image="/128x128.png">
+  </script>
        </div>
 		</li>
 		<br>
-
         </ol>
 </div>
 <br>

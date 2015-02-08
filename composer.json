@@ -1,6 +1,7 @@
 {
 "require":{
-	"propel/propel" : "~2.00@dev"
+	"propel/propel" : "~2.00@dev",
+	"stripe/stripe-php": "1.*"
 },
 "autoload": {
     "classmap": ["vendor/propel/schemas/generated-classes/"]

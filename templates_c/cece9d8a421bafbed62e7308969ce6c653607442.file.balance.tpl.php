@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 07:15:49
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 08:47:02
          compiled from "balance.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:117397477154d6b1392a9124-79084652%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'cece9d8a421bafbed62e7308969ce6c653607442' => 
     array (
       0 => 'balance.tpl',
-      1 => 1423368971,
+      1 => 1423384097,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
@@ -49,7 +49,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
  src="https://www.dropbox.com/static/api/dropbox-datastores-1.2-latest.js" type="text/javascript"><?php echo '</script'; ?>
 >
     
-        <?php echo '<script'; ?>
+<?php echo '<script'; ?>
  src="balance.js" type="text/javascript"><?php echo '</script'; ?>
 >
 
@@ -107,10 +107,19 @@ $_valid = $_smarty_tpl->decodeProperties(array (
        <div class="form-group">
 			<label for="payment_info" class="col-sm-2 control-label">Payment Information:</label>
 			<input id="payment_info"></input> 
+  <?php echo '<script'; ?>
+
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+    data-amount=""
+    data-name="Demo Site"
+    data-description=""
+    data-image="/128x128.png">
+  <?php echo '</script'; ?>
+>
        </div>
 		</li>
 		<br>
-
         </ol>
 </div>
 <br>

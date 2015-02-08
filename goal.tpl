@@ -14,10 +14,24 @@
             <h4>{$goal->getCampaignStatus()->getStatus()}</h4>
             <br>
             <h4>Balance: </h4>
-            <h4>PLACEHOLDERZ</h4>
+            <h4>${$balance->getAmount()}</h4>
         </div>
-        <div id="progress_bar_div">
-            PLACEHOLDER FOR PROGRESS BAR
-        </div>
+	<div id="checkpoint_info_div">
+		<table id="checkpoint_table" class="dataTable display" cellspacing="0" width="100%">
+			<thead>
+				<th>Checkpoint Date</th>
+				<th>Checkpoint Status</th>
+				<th>Upload Proof</th>
+			</thead>
+			<tbody>
+				{foreach from=$checkpoints  item=checkpoint}
+					<td>{$checkpoint->getDate()->format('Y-m-d')}</td>
+					<td>{$checkpoint->getComplete()}</td>
+					<td><button class="checkpoint-button">Upload Proof</button></td>
+					<td><button
+				{/foreach}
+			</tbody>
+		</table>
+	</div>
 {/block}
 

@@ -11,13 +11,23 @@ $goalId = $_GET["goalId"];
 $campaignQuery = new CampaignQuery();
 $goal = $campaignQuery->findPK($goalId);
 $smarty->assign('goal', $goal);
-$partnershipQuery = PartnershipQuery::create()->filterByCampaign($goal)->find();
+$balanceId = $goal->getBalanceId();
+$balanceQuery = new BalanceQuery();
+$balance = $balanceQuery->findPK($balanceId);
+$smarty->assign('balance', $balance);
+$partnershipQuery = PartnershipQuery::create()->filterByCampaignId($goalId)->find();
 $partnership = $partnershipQuery[0];
+$checkpointQuery = CheckpointQuery::create()->filterByCampaignId($goalId)->find();
+$smarty->assign('checkpoints', $checkpointQuery);
+
+if($partnership != null){
 if($partnership->getUserId() == $_COOKIE["user_id"]){
     $smarty->assign('partnership', $partnership);
-    $checkpointQuery = CheckpointQuery::create()->filterByCampaignId($goal->getId())->find();
-    $smarty->assign('checkpoints', $checkpointQuery);
     $smarty->display('partner_goal.tpl');
+}
+else{
+$smarty->display('goal.tpl');
+}
 }
 else{
 $smarty->display('goal.tpl');
