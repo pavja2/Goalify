@@ -1,6 +1,6 @@
 <head>
 	<link rel = "stylesheet" type = "text/css" href = "base.css">
-	<h1>Goalie
+	<h1><img src="Goalify.png" src="Bet on yourself!">
 	<h2>Bet on yourself!</h2>
 	<ul id = "navigation">
 		<li><a href = my_profile.html>My Profile</a></li>

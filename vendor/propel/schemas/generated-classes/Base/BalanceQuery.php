@@ -21,10 +21,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildBalanceQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildBalanceQuery orderByCampaignId($order = Criteria::ASC) Order by the campaign_id column
  * @method     ChildBalanceQuery orderByAmount($order = Criteria::ASC) Order by the amount column
  * @method     ChildBalanceQuery orderByPaymentInfo($order = Criteria::ASC) Order by the payment_info column
  *
  * @method     ChildBalanceQuery groupById() Group by the id column
+ * @method     ChildBalanceQuery groupByCampaignId() Group by the campaign_id column
  * @method     ChildBalanceQuery groupByAmount() Group by the amount column
  * @method     ChildBalanceQuery groupByPaymentInfo() Group by the payment_info column
  *
@@ -32,9 +34,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBalanceQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildBalanceQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildBalanceQuery leftJoinCampaign($relationAlias = null) Adds a LEFT JOIN clause to the query using the Campaign relation
- * @method     ChildBalanceQuery rightJoinCampaign($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Campaign relation
- * @method     ChildBalanceQuery innerJoinCampaign($relationAlias = null) Adds a INNER JOIN clause to the query using the Campaign relation
+ * @method     ChildBalanceQuery leftJoinCampaignRelatedByCampaignId($relationAlias = null) Adds a LEFT JOIN clause to the query using the CampaignRelatedByCampaignId relation
+ * @method     ChildBalanceQuery rightJoinCampaignRelatedByCampaignId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CampaignRelatedByCampaignId relation
+ * @method     ChildBalanceQuery innerJoinCampaignRelatedByCampaignId($relationAlias = null) Adds a INNER JOIN clause to the query using the CampaignRelatedByCampaignId relation
+ *
+ * @method     ChildBalanceQuery leftJoinCampaignRelatedByBalanceId($relationAlias = null) Adds a LEFT JOIN clause to the query using the CampaignRelatedByBalanceId relation
+ * @method     ChildBalanceQuery rightJoinCampaignRelatedByBalanceId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CampaignRelatedByBalanceId relation
+ * @method     ChildBalanceQuery innerJoinCampaignRelatedByBalanceId($relationAlias = null) Adds a INNER JOIN clause to the query using the CampaignRelatedByBalanceId relation
  *
  * @method     \CampaignQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
@@ -42,6 +48,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBalance findOneOrCreate(ConnectionInterface $con = null) Return the first ChildBalance matching the query, or a new ChildBalance object populated from the query conditions when no match is found
  *
  * @method     ChildBalance findOneById(int $id) Return the first ChildBalance filtered by the id column
+ * @method     ChildBalance findOneByCampaignId(int $campaign_id) Return the first ChildBalance filtered by the campaign_id column
  * @method     ChildBalance findOneByAmount(double $amount) Return the first ChildBalance filtered by the amount column
  * @method     ChildBalance findOneByPaymentInfo(string $payment_info) Return the first ChildBalance filtered by the payment_info column *
 
@@ -49,11 +56,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildBalance requireOne(ConnectionInterface $con = null) Return the first ChildBalance matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildBalance requireOneById(int $id) Return the first ChildBalance filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildBalance requireOneByCampaignId(int $campaign_id) Return the first ChildBalance filtered by the campaign_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBalance requireOneByAmount(double $amount) Return the first ChildBalance filtered by the amount column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildBalance requireOneByPaymentInfo(string $payment_info) Return the first ChildBalance filtered by the payment_info column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildBalance[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildBalance objects based on current ModelCriteria
  * @method     ChildBalance[]|ObjectCollection findById(int $id) Return ChildBalance objects filtered by the id column
+ * @method     ChildBalance[]|ObjectCollection findByCampaignId(int $campaign_id) Return ChildBalance objects filtered by the campaign_id column
  * @method     ChildBalance[]|ObjectCollection findByAmount(double $amount) Return ChildBalance objects filtered by the amount column
  * @method     ChildBalance[]|ObjectCollection findByPaymentInfo(string $payment_info) Return ChildBalance objects filtered by the payment_info column
  * @method     ChildBalance[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -148,7 +157,7 @@ abstract class BalanceQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, amount, payment_info FROM balance WHERE id = :p0';
+        $sql = 'SELECT id, campaign_id, amount, payment_info FROM balance WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -280,6 +289,49 @@ abstract class BalanceQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the campaign_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCampaignId(1234); // WHERE campaign_id = 1234
+     * $query->filterByCampaignId(array(12, 34)); // WHERE campaign_id IN (12, 34)
+     * $query->filterByCampaignId(array('min' => 12)); // WHERE campaign_id > 12
+     * </code>
+     *
+     * @see       filterByCampaignRelatedByCampaignId()
+     *
+     * @param     mixed $campaignId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildBalanceQuery The current query, for fluid interface
+     */
+    public function filterByCampaignId($campaignId = null, $comparison = null)
+    {
+        if (is_array($campaignId)) {
+            $useMinMax = false;
+            if (isset($campaignId['min'])) {
+                $this->addUsingAlias(BalanceTableMap::COL_CAMPAIGN_ID, $campaignId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($campaignId['max'])) {
+                $this->addUsingAlias(BalanceTableMap::COL_CAMPAIGN_ID, $campaignId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(BalanceTableMap::COL_CAMPAIGN_ID, $campaignId, $comparison);
+    }
+
+    /**
      * Filter the query on the amount column
      *
      * Example usage:
@@ -352,38 +404,42 @@ abstract class BalanceQuery extends ModelCriteria
     /**
      * Filter the query by a related \Campaign object
      *
-     * @param \Campaign|ObjectCollection $campaign the related object to use as filter
+     * @param \Campaign|ObjectCollection $campaign The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
      *
      * @return ChildBalanceQuery The current query, for fluid interface
      */
-    public function filterByCampaign($campaign, $comparison = null)
+    public function filterByCampaignRelatedByCampaignId($campaign, $comparison = null)
     {
         if ($campaign instanceof \Campaign) {
             return $this
-                ->addUsingAlias(BalanceTableMap::COL_ID, $campaign->getBalanceId(), $comparison);
+                ->addUsingAlias(BalanceTableMap::COL_CAMPAIGN_ID, $campaign->getId(), $comparison);
         } elseif ($campaign instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
             return $this
-                ->useCampaignQuery()
-                ->filterByPrimaryKeys($campaign->getPrimaryKeys())
-                ->endUse();
+                ->addUsingAlias(BalanceTableMap::COL_CAMPAIGN_ID, $campaign->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByCampaign() only accepts arguments of type \Campaign or Collection');
+            throw new PropelException('filterByCampaignRelatedByCampaignId() only accepts arguments of type \Campaign or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Campaign relation
+     * Adds a JOIN clause to the query using the CampaignRelatedByCampaignId relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildBalanceQuery The current query, for fluid interface
      */
-    public function joinCampaign($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinCampaignRelatedByCampaignId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Campaign');
+        $relationMap = $tableMap->getRelation('CampaignRelatedByCampaignId');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -398,14 +454,14 @@ abstract class BalanceQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Campaign');
+            $this->addJoinObject($join, 'CampaignRelatedByCampaignId');
         }
 
         return $this;
     }
 
     /**
-     * Use the Campaign relation Campaign object
+     * Use the CampaignRelatedByCampaignId relation Campaign object
      *
      * @see useQuery()
      *
@@ -415,11 +471,84 @@ abstract class BalanceQuery extends ModelCriteria
      *
      * @return \CampaignQuery A secondary query class using the current class as primary query
      */
-    public function useCampaignQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useCampaignRelatedByCampaignIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinCampaign($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Campaign', '\CampaignQuery');
+            ->joinCampaignRelatedByCampaignId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CampaignRelatedByCampaignId', '\CampaignQuery');
+    }
+
+    /**
+     * Filter the query by a related \Campaign object
+     *
+     * @param \Campaign|ObjectCollection $campaign the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildBalanceQuery The current query, for fluid interface
+     */
+    public function filterByCampaignRelatedByBalanceId($campaign, $comparison = null)
+    {
+        if ($campaign instanceof \Campaign) {
+            return $this
+                ->addUsingAlias(BalanceTableMap::COL_ID, $campaign->getBalanceId(), $comparison);
+        } elseif ($campaign instanceof ObjectCollection) {
+            return $this
+                ->useCampaignRelatedByBalanceIdQuery()
+                ->filterByPrimaryKeys($campaign->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCampaignRelatedByBalanceId() only accepts arguments of type \Campaign or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CampaignRelatedByBalanceId relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildBalanceQuery The current query, for fluid interface
+     */
+    public function joinCampaignRelatedByBalanceId($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CampaignRelatedByBalanceId');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CampaignRelatedByBalanceId');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CampaignRelatedByBalanceId relation Campaign object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \CampaignQuery A secondary query class using the current class as primary query
+     */
+    public function useCampaignRelatedByBalanceIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCampaignRelatedByBalanceId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CampaignRelatedByBalanceId', '\CampaignQuery');
     }
 
     /**

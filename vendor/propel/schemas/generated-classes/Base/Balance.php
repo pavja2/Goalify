@@ -70,6 +70,12 @@ abstract class Balance implements ActiveRecordInterface
     protected $id;
 
     /**
+     * The value for the campaign_id field.
+     * @var        int
+     */
+    protected $campaign_id;
+
+    /**
      * The value for the amount field.
      * @var        double
      */
@@ -82,10 +88,15 @@ abstract class Balance implements ActiveRecordInterface
     protected $payment_info;
 
     /**
+     * @var        ChildCampaign
+     */
+    protected $aCampaignRelatedByCampaignId;
+
+    /**
      * @var        ObjectCollection|ChildCampaign[] Collection to store aggregation of ChildCampaign objects.
      */
-    protected $collCampaigns;
-    protected $collCampaignsPartial;
+    protected $collCampaignsRelatedByBalanceId;
+    protected $collCampaignsRelatedByBalanceIdPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -99,7 +110,7 @@ abstract class Balance implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildCampaign[]
      */
-    protected $campaignsScheduledForDeletion = null;
+    protected $campaignsRelatedByBalanceIdScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Balance object.
@@ -329,6 +340,16 @@ abstract class Balance implements ActiveRecordInterface
     }
 
     /**
+     * Get the [campaign_id] column value.
+     *
+     * @return int
+     */
+    public function getCampaignId()
+    {
+        return $this->campaign_id;
+    }
+
+    /**
      * Get the [amount] column value.
      *
      * @return double
@@ -367,6 +388,30 @@ abstract class Balance implements ActiveRecordInterface
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [campaign_id] column.
+     *
+     * @param int $v new value
+     * @return $this|\Balance The current object (for fluent API support)
+     */
+    public function setCampaignId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->campaign_id !== $v) {
+            $this->campaign_id = $v;
+            $this->modifiedColumns[BalanceTableMap::COL_CAMPAIGN_ID] = true;
+        }
+
+        if ($this->aCampaignRelatedByCampaignId !== null && $this->aCampaignRelatedByCampaignId->getId() !== $v) {
+            $this->aCampaignRelatedByCampaignId = null;
+        }
+
+        return $this;
+    } // setCampaignId()
 
     /**
      * Set the value of [amount] column.
@@ -447,10 +492,13 @@ abstract class Balance implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : BalanceTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : BalanceTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : BalanceTableMap::translateFieldName('CampaignId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->campaign_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : BalanceTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : BalanceTableMap::translateFieldName('PaymentInfo', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : BalanceTableMap::translateFieldName('PaymentInfo', TableMap::TYPE_PHPNAME, $indexType)];
             $this->payment_info = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -460,7 +508,7 @@ abstract class Balance implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = BalanceTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = BalanceTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Balance'), 0, $e);
@@ -482,6 +530,9 @@ abstract class Balance implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aCampaignRelatedByCampaignId !== null && $this->campaign_id !== $this->aCampaignRelatedByCampaignId->getId()) {
+            $this->aCampaignRelatedByCampaignId = null;
+        }
     } // ensureConsistency
 
     /**
@@ -521,7 +572,8 @@ abstract class Balance implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collCampaigns = null;
+            $this->aCampaignRelatedByCampaignId = null;
+            $this->collCampaignsRelatedByBalanceId = null;
 
         } // if (deep)
     }
@@ -622,6 +674,18 @@ abstract class Balance implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aCampaignRelatedByCampaignId !== null) {
+                if ($this->aCampaignRelatedByCampaignId->isModified() || $this->aCampaignRelatedByCampaignId->isNew()) {
+                    $affectedRows += $this->aCampaignRelatedByCampaignId->save($con);
+                }
+                $this->setCampaignRelatedByCampaignId($this->aCampaignRelatedByCampaignId);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -633,18 +697,18 @@ abstract class Balance implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->campaignsScheduledForDeletion !== null) {
-                if (!$this->campaignsScheduledForDeletion->isEmpty()) {
-                    foreach ($this->campaignsScheduledForDeletion as $campaign) {
+            if ($this->campaignsRelatedByBalanceIdScheduledForDeletion !== null) {
+                if (!$this->campaignsRelatedByBalanceIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->campaignsRelatedByBalanceIdScheduledForDeletion as $campaignRelatedByBalanceId) {
                         // need to save related object because we set the relation to null
-                        $campaign->save($con);
+                        $campaignRelatedByBalanceId->save($con);
                     }
-                    $this->campaignsScheduledForDeletion = null;
+                    $this->campaignsRelatedByBalanceIdScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collCampaigns !== null) {
-                foreach ($this->collCampaigns as $referrerFK) {
+            if ($this->collCampaignsRelatedByBalanceId !== null) {
+                foreach ($this->collCampaignsRelatedByBalanceId as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -680,6 +744,9 @@ abstract class Balance implements ActiveRecordInterface
         if ($this->isColumnModified(BalanceTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
+        if ($this->isColumnModified(BalanceTableMap::COL_CAMPAIGN_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'campaign_id';
+        }
         if ($this->isColumnModified(BalanceTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
         }
@@ -699,6 +766,9 @@ abstract class Balance implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case 'campaign_id':
+                        $stmt->bindValue($identifier, $this->campaign_id, PDO::PARAM_INT);
                         break;
                     case 'amount':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
@@ -772,9 +842,12 @@ abstract class Balance implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getAmount();
+                return $this->getCampaignId();
                 break;
             case 2:
+                return $this->getAmount();
+                break;
+            case 3:
                 return $this->getPaymentInfo();
                 break;
             default:
@@ -808,8 +881,9 @@ abstract class Balance implements ActiveRecordInterface
         $keys = BalanceTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getAmount(),
-            $keys[2] => $this->getPaymentInfo(),
+            $keys[1] => $this->getCampaignId(),
+            $keys[2] => $this->getAmount(),
+            $keys[3] => $this->getPaymentInfo(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -817,7 +891,22 @@ abstract class Balance implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collCampaigns) {
+            if (null !== $this->aCampaignRelatedByCampaignId) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'campaign';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'campaign';
+                        break;
+                    default:
+                        $key = 'Campaign';
+                }
+
+                $result[$key] = $this->aCampaignRelatedByCampaignId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCampaignsRelatedByBalanceId) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -830,7 +919,7 @@ abstract class Balance implements ActiveRecordInterface
                         $key = 'Campaigns';
                 }
 
-                $result[$key] = $this->collCampaigns->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collCampaignsRelatedByBalanceId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -870,9 +959,12 @@ abstract class Balance implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setAmount($value);
+                $this->setCampaignId($value);
                 break;
             case 2:
+                $this->setAmount($value);
+                break;
+            case 3:
                 $this->setPaymentInfo($value);
                 break;
         } // switch()
@@ -905,10 +997,13 @@ abstract class Balance implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setAmount($arr[$keys[1]]);
+            $this->setCampaignId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setPaymentInfo($arr[$keys[2]]);
+            $this->setAmount($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setPaymentInfo($arr[$keys[3]]);
         }
     }
 
@@ -953,6 +1048,9 @@ abstract class Balance implements ActiveRecordInterface
 
         if ($this->isColumnModified(BalanceTableMap::COL_ID)) {
             $criteria->add(BalanceTableMap::COL_ID, $this->id);
+        }
+        if ($this->isColumnModified(BalanceTableMap::COL_CAMPAIGN_ID)) {
+            $criteria->add(BalanceTableMap::COL_CAMPAIGN_ID, $this->campaign_id);
         }
         if ($this->isColumnModified(BalanceTableMap::COL_AMOUNT)) {
             $criteria->add(BalanceTableMap::COL_AMOUNT, $this->amount);
@@ -1046,6 +1144,7 @@ abstract class Balance implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setCampaignId($this->getCampaignId());
         $copyObj->setAmount($this->getAmount());
         $copyObj->setPaymentInfo($this->getPaymentInfo());
 
@@ -1054,9 +1153,9 @@ abstract class Balance implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getCampaigns() as $relObj) {
+            foreach ($this->getCampaignsRelatedByBalanceId() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCampaign($relObj->copy($deepCopy));
+                    $copyObj->addCampaignRelatedByBalanceId($relObj->copy($deepCopy));
                 }
             }
 
@@ -1090,6 +1189,57 @@ abstract class Balance implements ActiveRecordInterface
         return $copyObj;
     }
 
+    /**
+     * Declares an association between this object and a ChildCampaign object.
+     *
+     * @param  ChildCampaign $v
+     * @return $this|\Balance The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCampaignRelatedByCampaignId(ChildCampaign $v = null)
+    {
+        if ($v === null) {
+            $this->setCampaignId(NULL);
+        } else {
+            $this->setCampaignId($v->getId());
+        }
+
+        $this->aCampaignRelatedByCampaignId = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildCampaign object, it will not be re-added.
+        if ($v !== null) {
+            $v->addBalanceRelatedByCampaignId($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildCampaign object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildCampaign The associated ChildCampaign object.
+     * @throws PropelException
+     */
+    public function getCampaignRelatedByCampaignId(ConnectionInterface $con = null)
+    {
+        if ($this->aCampaignRelatedByCampaignId === null && ($this->campaign_id !== null)) {
+            $this->aCampaignRelatedByCampaignId = ChildCampaignQuery::create()->findPk($this->campaign_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCampaignRelatedByCampaignId->addBalancesRelatedByCampaignId($this);
+             */
+        }
+
+        return $this->aCampaignRelatedByCampaignId;
+    }
+
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -1101,37 +1251,37 @@ abstract class Balance implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Campaign' == $relationName) {
-            return $this->initCampaigns();
+        if ('CampaignRelatedByBalanceId' == $relationName) {
+            return $this->initCampaignsRelatedByBalanceId();
         }
     }
 
     /**
-     * Clears out the collCampaigns collection
+     * Clears out the collCampaignsRelatedByBalanceId collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addCampaigns()
+     * @see        addCampaignsRelatedByBalanceId()
      */
-    public function clearCampaigns()
+    public function clearCampaignsRelatedByBalanceId()
     {
-        $this->collCampaigns = null; // important to set this to NULL since that means it is uninitialized
+        $this->collCampaignsRelatedByBalanceId = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collCampaigns collection loaded partially.
+     * Reset is the collCampaignsRelatedByBalanceId collection loaded partially.
      */
-    public function resetPartialCampaigns($v = true)
+    public function resetPartialCampaignsRelatedByBalanceId($v = true)
     {
-        $this->collCampaignsPartial = $v;
+        $this->collCampaignsRelatedByBalanceIdPartial = $v;
     }
 
     /**
-     * Initializes the collCampaigns collection.
+     * Initializes the collCampaignsRelatedByBalanceId collection.
      *
-     * By default this just sets the collCampaigns collection to an empty array (like clearcollCampaigns());
+     * By default this just sets the collCampaignsRelatedByBalanceId collection to an empty array (like clearcollCampaignsRelatedByBalanceId());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1140,13 +1290,13 @@ abstract class Balance implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initCampaigns($overrideExisting = true)
+    public function initCampaignsRelatedByBalanceId($overrideExisting = true)
     {
-        if (null !== $this->collCampaigns && !$overrideExisting) {
+        if (null !== $this->collCampaignsRelatedByBalanceId && !$overrideExisting) {
             return;
         }
-        $this->collCampaigns = new ObjectCollection();
-        $this->collCampaigns->setModel('\Campaign');
+        $this->collCampaignsRelatedByBalanceId = new ObjectCollection();
+        $this->collCampaignsRelatedByBalanceId->setModel('\Campaign');
     }
 
     /**
@@ -1163,48 +1313,48 @@ abstract class Balance implements ActiveRecordInterface
      * @return ObjectCollection|ChildCampaign[] List of ChildCampaign objects
      * @throws PropelException
      */
-    public function getCampaigns(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getCampaignsRelatedByBalanceId(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collCampaignsPartial && !$this->isNew();
-        if (null === $this->collCampaigns || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collCampaigns) {
+        $partial = $this->collCampaignsRelatedByBalanceIdPartial && !$this->isNew();
+        if (null === $this->collCampaignsRelatedByBalanceId || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCampaignsRelatedByBalanceId) {
                 // return empty collection
-                $this->initCampaigns();
+                $this->initCampaignsRelatedByBalanceId();
             } else {
-                $collCampaigns = ChildCampaignQuery::create(null, $criteria)
-                    ->filterByBalance($this)
+                $collCampaignsRelatedByBalanceId = ChildCampaignQuery::create(null, $criteria)
+                    ->filterByBalanceRelatedByBalanceId($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collCampaignsPartial && count($collCampaigns)) {
-                        $this->initCampaigns(false);
+                    if (false !== $this->collCampaignsRelatedByBalanceIdPartial && count($collCampaignsRelatedByBalanceId)) {
+                        $this->initCampaignsRelatedByBalanceId(false);
 
-                        foreach ($collCampaigns as $obj) {
-                            if (false == $this->collCampaigns->contains($obj)) {
-                                $this->collCampaigns->append($obj);
+                        foreach ($collCampaignsRelatedByBalanceId as $obj) {
+                            if (false == $this->collCampaignsRelatedByBalanceId->contains($obj)) {
+                                $this->collCampaignsRelatedByBalanceId->append($obj);
                             }
                         }
 
-                        $this->collCampaignsPartial = true;
+                        $this->collCampaignsRelatedByBalanceIdPartial = true;
                     }
 
-                    return $collCampaigns;
+                    return $collCampaignsRelatedByBalanceId;
                 }
 
-                if ($partial && $this->collCampaigns) {
-                    foreach ($this->collCampaigns as $obj) {
+                if ($partial && $this->collCampaignsRelatedByBalanceId) {
+                    foreach ($this->collCampaignsRelatedByBalanceId as $obj) {
                         if ($obj->isNew()) {
-                            $collCampaigns[] = $obj;
+                            $collCampaignsRelatedByBalanceId[] = $obj;
                         }
                     }
                 }
 
-                $this->collCampaigns = $collCampaigns;
-                $this->collCampaignsPartial = false;
+                $this->collCampaignsRelatedByBalanceId = $collCampaignsRelatedByBalanceId;
+                $this->collCampaignsRelatedByBalanceIdPartial = false;
             }
         }
 
-        return $this->collCampaigns;
+        return $this->collCampaignsRelatedByBalanceId;
     }
 
     /**
@@ -1213,29 +1363,29 @@ abstract class Balance implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $campaigns A Propel collection.
+     * @param      Collection $campaignsRelatedByBalanceId A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildBalance The current object (for fluent API support)
      */
-    public function setCampaigns(Collection $campaigns, ConnectionInterface $con = null)
+    public function setCampaignsRelatedByBalanceId(Collection $campaignsRelatedByBalanceId, ConnectionInterface $con = null)
     {
-        /** @var ChildCampaign[] $campaignsToDelete */
-        $campaignsToDelete = $this->getCampaigns(new Criteria(), $con)->diff($campaigns);
+        /** @var ChildCampaign[] $campaignsRelatedByBalanceIdToDelete */
+        $campaignsRelatedByBalanceIdToDelete = $this->getCampaignsRelatedByBalanceId(new Criteria(), $con)->diff($campaignsRelatedByBalanceId);
 
 
-        $this->campaignsScheduledForDeletion = $campaignsToDelete;
+        $this->campaignsRelatedByBalanceIdScheduledForDeletion = $campaignsRelatedByBalanceIdToDelete;
 
-        foreach ($campaignsToDelete as $campaignRemoved) {
-            $campaignRemoved->setBalance(null);
+        foreach ($campaignsRelatedByBalanceIdToDelete as $campaignRelatedByBalanceIdRemoved) {
+            $campaignRelatedByBalanceIdRemoved->setBalanceRelatedByBalanceId(null);
         }
 
-        $this->collCampaigns = null;
-        foreach ($campaigns as $campaign) {
-            $this->addCampaign($campaign);
+        $this->collCampaignsRelatedByBalanceId = null;
+        foreach ($campaignsRelatedByBalanceId as $campaignRelatedByBalanceId) {
+            $this->addCampaignRelatedByBalanceId($campaignRelatedByBalanceId);
         }
 
-        $this->collCampaigns = $campaigns;
-        $this->collCampaignsPartial = false;
+        $this->collCampaignsRelatedByBalanceId = $campaignsRelatedByBalanceId;
+        $this->collCampaignsRelatedByBalanceIdPartial = false;
 
         return $this;
     }
@@ -1249,16 +1399,16 @@ abstract class Balance implements ActiveRecordInterface
      * @return int             Count of related Campaign objects.
      * @throws PropelException
      */
-    public function countCampaigns(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countCampaignsRelatedByBalanceId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collCampaignsPartial && !$this->isNew();
-        if (null === $this->collCampaigns || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCampaigns) {
+        $partial = $this->collCampaignsRelatedByBalanceIdPartial && !$this->isNew();
+        if (null === $this->collCampaignsRelatedByBalanceId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCampaignsRelatedByBalanceId) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getCampaigns());
+                return count($this->getCampaignsRelatedByBalanceId());
             }
 
             $query = ChildCampaignQuery::create(null, $criteria);
@@ -1267,11 +1417,11 @@ abstract class Balance implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByBalance($this)
+                ->filterByBalanceRelatedByBalanceId($this)
                 ->count($con);
         }
 
-        return count($this->collCampaigns);
+        return count($this->collCampaignsRelatedByBalanceId);
     }
 
     /**
@@ -1281,44 +1431,44 @@ abstract class Balance implements ActiveRecordInterface
      * @param  ChildCampaign $l ChildCampaign
      * @return $this|\Balance The current object (for fluent API support)
      */
-    public function addCampaign(ChildCampaign $l)
+    public function addCampaignRelatedByBalanceId(ChildCampaign $l)
     {
-        if ($this->collCampaigns === null) {
-            $this->initCampaigns();
-            $this->collCampaignsPartial = true;
+        if ($this->collCampaignsRelatedByBalanceId === null) {
+            $this->initCampaignsRelatedByBalanceId();
+            $this->collCampaignsRelatedByBalanceIdPartial = true;
         }
 
-        if (!$this->collCampaigns->contains($l)) {
-            $this->doAddCampaign($l);
+        if (!$this->collCampaignsRelatedByBalanceId->contains($l)) {
+            $this->doAddCampaignRelatedByBalanceId($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildCampaign $campaign The ChildCampaign object to add.
+     * @param ChildCampaign $campaignRelatedByBalanceId The ChildCampaign object to add.
      */
-    protected function doAddCampaign(ChildCampaign $campaign)
+    protected function doAddCampaignRelatedByBalanceId(ChildCampaign $campaignRelatedByBalanceId)
     {
-        $this->collCampaigns[]= $campaign;
-        $campaign->setBalance($this);
+        $this->collCampaignsRelatedByBalanceId[]= $campaignRelatedByBalanceId;
+        $campaignRelatedByBalanceId->setBalanceRelatedByBalanceId($this);
     }
 
     /**
-     * @param  ChildCampaign $campaign The ChildCampaign object to remove.
+     * @param  ChildCampaign $campaignRelatedByBalanceId The ChildCampaign object to remove.
      * @return $this|ChildBalance The current object (for fluent API support)
      */
-    public function removeCampaign(ChildCampaign $campaign)
+    public function removeCampaignRelatedByBalanceId(ChildCampaign $campaignRelatedByBalanceId)
     {
-        if ($this->getCampaigns()->contains($campaign)) {
-            $pos = $this->collCampaigns->search($campaign);
-            $this->collCampaigns->remove($pos);
-            if (null === $this->campaignsScheduledForDeletion) {
-                $this->campaignsScheduledForDeletion = clone $this->collCampaigns;
-                $this->campaignsScheduledForDeletion->clear();
+        if ($this->getCampaignsRelatedByBalanceId()->contains($campaignRelatedByBalanceId)) {
+            $pos = $this->collCampaignsRelatedByBalanceId->search($campaignRelatedByBalanceId);
+            $this->collCampaignsRelatedByBalanceId->remove($pos);
+            if (null === $this->campaignsRelatedByBalanceIdScheduledForDeletion) {
+                $this->campaignsRelatedByBalanceIdScheduledForDeletion = clone $this->collCampaignsRelatedByBalanceId;
+                $this->campaignsRelatedByBalanceIdScheduledForDeletion->clear();
             }
-            $this->campaignsScheduledForDeletion[]= $campaign;
-            $campaign->setBalance(null);
+            $this->campaignsRelatedByBalanceIdScheduledForDeletion[]= $campaignRelatedByBalanceId;
+            $campaignRelatedByBalanceId->setBalanceRelatedByBalanceId(null);
         }
 
         return $this;
@@ -1330,7 +1480,7 @@ abstract class Balance implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Balance is new, it will return
      * an empty collection; or if this Balance has previously
-     * been saved, it will retrieve related Campaigns from storage.
+     * been saved, it will retrieve related CampaignsRelatedByBalanceId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1341,12 +1491,12 @@ abstract class Balance implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildCampaign[] List of ChildCampaign objects
      */
-    public function getCampaignsJoinCampaignStatus(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCampaignsRelatedByBalanceIdJoinCampaignStatus(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCampaignQuery::create(null, $criteria);
         $query->joinWith('CampaignStatus', $joinBehavior);
 
-        return $this->getCampaigns($query, $con);
+        return $this->getCampaignsRelatedByBalanceId($query, $con);
     }
 
 
@@ -1355,7 +1505,7 @@ abstract class Balance implements ActiveRecordInterface
      * an identical criteria, it returns the collection.
      * Otherwise if this Balance is new, it will return
      * an empty collection; or if this Balance has previously
-     * been saved, it will retrieve related Campaigns from storage.
+     * been saved, it will retrieve related CampaignsRelatedByBalanceId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1366,12 +1516,12 @@ abstract class Balance implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildCampaign[] List of ChildCampaign objects
      */
-    public function getCampaignsJoinActivity(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCampaignsRelatedByBalanceIdJoinActivity(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCampaignQuery::create(null, $criteria);
         $query->joinWith('Activity', $joinBehavior);
 
-        return $this->getCampaigns($query, $con);
+        return $this->getCampaignsRelatedByBalanceId($query, $con);
     }
 
     /**
@@ -1381,7 +1531,11 @@ abstract class Balance implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aCampaignRelatedByCampaignId) {
+            $this->aCampaignRelatedByCampaignId->removeBalanceRelatedByCampaignId($this);
+        }
         $this->id = null;
+        $this->campaign_id = null;
         $this->amount = null;
         $this->payment_info = null;
         $this->alreadyInSave = false;
@@ -1402,14 +1556,15 @@ abstract class Balance implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collCampaigns) {
-                foreach ($this->collCampaigns as $o) {
+            if ($this->collCampaignsRelatedByBalanceId) {
+                foreach ($this->collCampaignsRelatedByBalanceId as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collCampaigns = null;
+        $this->collCampaignsRelatedByBalanceId = null;
+        $this->aCampaignRelatedByCampaignId = null;
     }
 
     /**

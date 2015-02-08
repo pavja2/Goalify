@@ -3,36 +3,26 @@
 {/block}
 {block name = "body"}
 	<h3>Partnerships</h3> 
-	<ul>
-		<li><h5>Accountable To</h5></li>
-		<ol>
-			<li>
-				<h5><a href = partner1_profile.html>{$PARTNER1}</a></h5>
-				<p>{$GOAL1}</p>
-			</li>
-			<li>
-				<h5><a href = partner2_profile.html>{$PARTNER2}</a></h5>
-				<p>{$GOAL2}</p>
-			</li>
-			<li>
-				<h5>{$CONTINUED}</h5>
-				<p>{$GOAL}</p>
-			</li>
-		</ol>
-		<li><h5>Accountable For</h5></li>
-		<ol>
-			<li>
-				<h5><a href = partner1_profile.html>{$PARTNER1}</a></h5>
-				<p><a href = approve_goals.html>[$GOAL1]</a></p>
-			</li>
-			<li>
-				<h5><a href = partner2_profile.html>{$PARTNER2}</a></h5>
-				<p><a href = approve_goals.html>[$GOAL2]</a></p>
-			</li>
-			<li>
-				<h5>[continued]</h5>
-				<p><a href = approve_goals.html>{$GOAL}</a></p>
-			</li>
-		</ol>
-	</ul>
-{/block}
+	<table id = partner_table class = "dataTable display" cellspacing = "0" width = 100%">
+		<thread>
+			<tr>
+				<th>Partner Name</th>
+				<th>Parther Goal</th>
+				<th>Partner Start Date</th>
+				<th>Partner End Date</th>
+				<th>Partner Status</th>
+			</tr> 
+		</thread>
+		<tbody>
+			{foreach from=$partnerList item = partner}
+				<tr onclick = "window.document.location = 'goal.php?goalId={$goal->getId()}'">
+					<td>{$partner->getPartnerName()}</td>
+					<td>{$partner->getPartnerGoal()}</td>
+					<td>{$partner->getPartnerBeginDate()->format('Y-m-d')}</td>
+					<td>{$partner->getPartnerEndDate()->format('Y-m-d;)}</td>
+					<td>{$partner->getPartnerStatus()}</td>
+				</tr>
+			{/foreach}
+		</tbody>
+	</table>
+{/block} 

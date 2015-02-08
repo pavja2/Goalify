@@ -1,12 +1,23 @@
-{extends file = "base.tpl"}
-{block = "header"}
+{extends file = 'base.tpl'}
+{block name = "header"}
 {/block}
-{block = "body}
-	<h3>Goal Name</h3>
-	<p>Goal Description</p>
-	<h4>Start Date: start date</h4>
-	<h4>End Date: end date</h4>
-	<h4>Status: status</h4>
-	<h4>Balance: balance</h4>
+{block name = "body"}
+	<div id="goal_info_div">
+            <h3>{$goal->getName()}</h3>
+            <h4>Start Date: </h4>
+            <h4>{$goal->getBeginDate()->format('Y-m-d')}</h4>
+            <br>
+            <h4>End Date: </h4>
+            <h4>{$goal->getEndDate()->format('Y-m-d')}</h4>
+            <br>
+            <h4>Campaign Status: </h4>
+            <h4>{$goal->getCampaignStatus()->getStatus()}</h4>
+            <br>
+            <h4>Balance: </h4>
+            <h4>PLACEHOLDERZ</h4>
+        </div>
+        <div id="progress_bar_div">
+            PLACEHOLDER FOR PROGRESS BAR
+        </div>
 {/block}
 

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 15:36:43
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 20:47:11
          compiled from "log_in.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:88917092154d62c39d40880-29842782%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd923797660d99c8714e9761e8b7a11a74dee1fc8' => 
     array (
       0 => 'before_login.tpl',
-      1 => 1423323400,
+      1 => 1423340701,
       2 => 'file',
     ),
   ),
@@ -27,11 +27,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_54d62c39da9c36_67005841')) {function content_54d62c39da9c36_67005841($_smarty_tpl) {?><head>
 	<link rel = "stylesheet" type = "text/css" href = "before_login.css">
-	<h1>Goalie
+	<h1><img src="Goalify.png" alt="Bet on yourself!"></h1>
 	<h2>Bet on yourself!</h2>
 	<ul id = "navigation">
-		<li><a href = log_in.html>Log In</a></li>
-		<li><a href = sign_up.html>Sign In</a></li>
+		<li><a href = log_in.tpl>Log In</a></li>
+		<li><a href = sign_up.tpl>Sign In</a></li>
 	</ul>
 </head>
 <body>

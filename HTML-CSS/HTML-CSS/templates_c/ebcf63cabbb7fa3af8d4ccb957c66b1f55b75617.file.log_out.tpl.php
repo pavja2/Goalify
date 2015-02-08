@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 15:32:45
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 19:51:43
          compiled from "log_out.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:196769393154d62c536cd946-55475015%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'd923797660d99c8714e9761e8b7a11a74dee1fc8' => 
     array (
       0 => 'before_login.tpl',
-      1 => 1423323163,
+      1 => 1423336207,
       2 => 'file',
     ),
   ),
@@ -26,8 +26,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_54d62c53746400_49805357')) {function content_54d62c53746400_49805357($_smarty_tpl) {?><head>
-    
-
+	<link rel = "stylesheet" type = "text/css" href = "before_login.css">
+	<h1><img src="Goalify.png" alt="Bet on yourself!">
+	<h2>Bet on yourself!</h2>
+	<ul id = "navigation">
+		<li><a href = log_in.html>Log In</a></li>
+		<li><a href = sign_up.html>Sign In</a></li>
+	</ul>
 </head>
 <body>
 

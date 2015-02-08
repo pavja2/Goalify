@@ -1307,10 +1307,10 @@ abstract class Activity implements ActiveRecordInterface
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
      * @return ObjectCollection|ChildCampaign[] List of ChildCampaign objects
      */
-    public function getCampaignsJoinBalance(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCampaignsJoinBalanceRelatedByBalanceId(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildCampaignQuery::create(null, $criteria);
-        $query->joinWith('Balance', $joinBehavior);
+        $query->joinWith('BalanceRelatedByBalanceId', $joinBehavior);
 
         return $this->getCampaigns($query, $con);
     }

@@ -183,7 +183,7 @@ class CampaignTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Balance', '\\Balance', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('BalanceRelatedByBalanceId', '\\Balance', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':balance_id',
@@ -204,6 +204,20 @@ class CampaignTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Partnerships', false);
+        $this->addRelation('BalanceRelatedByCampaignId', '\\Balance', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':campaign_id',
+    1 => ':id',
+  ),
+), null, null, 'BalancesRelatedByCampaignId', false);
+        $this->addRelation('Checkpoint', '\\Checkpoint', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':campaign_id',
+    1 => ':id',
+  ),
+), null, null, 'Checkpoints', false);
     } // buildRelations()
 
     /**

@@ -5,5 +5,5 @@
 <script src='index.js'> </script>
 {/block}
 {block name=body}
-    <button id="signin-button">Sign Up With Dropbox!</button>
+    <button id="signup-button">Sign Up With Dropbox!</button>
 {/block}

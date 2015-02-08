@@ -10,6 +10,8 @@ use \Campaign as ChildCampaign;
 use \CampaignQuery as ChildCampaignQuery;
 use \CampaignStatus as ChildCampaignStatus;
 use \CampaignStatusQuery as ChildCampaignStatusQuery;
+use \Checkpoint as ChildCheckpoint;
+use \CheckpointQuery as ChildCheckpointQuery;
 use \Partnership as ChildPartnership;
 use \PartnershipQuery as ChildPartnershipQuery;
 use \DateTime;
@@ -127,7 +129,7 @@ abstract class Campaign implements ActiveRecordInterface
     /**
      * @var        ChildBalance
      */
-    protected $aBalance;
+    protected $aBalanceRelatedByBalanceId;
 
     /**
      * @var        ChildActivity
@@ -139,6 +141,18 @@ abstract class Campaign implements ActiveRecordInterface
      */
     protected $collPartnerships;
     protected $collPartnershipsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildBalance[] Collection to store aggregation of ChildBalance objects.
+     */
+    protected $collBalancesRelatedByCampaignId;
+    protected $collBalancesRelatedByCampaignIdPartial;
+
+    /**
+     * @var        ObjectCollection|ChildCheckpoint[] Collection to store aggregation of ChildCheckpoint objects.
+     */
+    protected $collCheckpoints;
+    protected $collCheckpointsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -153,6 +167,18 @@ abstract class Campaign implements ActiveRecordInterface
      * @var ObjectCollection|ChildPartnership[]
      */
     protected $partnershipsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBalance[]
+     */
+    protected $balancesRelatedByCampaignIdScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildCheckpoint[]
+     */
+    protected $checkpointsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Campaign object.
@@ -612,8 +638,8 @@ abstract class Campaign implements ActiveRecordInterface
             $this->modifiedColumns[CampaignTableMap::COL_BALANCE_ID] = true;
         }
 
-        if ($this->aBalance !== null && $this->aBalance->getId() !== $v) {
-            $this->aBalance = null;
+        if ($this->aBalanceRelatedByBalanceId !== null && $this->aBalanceRelatedByBalanceId->getId() !== $v) {
+            $this->aBalanceRelatedByBalanceId = null;
         }
 
         return $this;
@@ -741,8 +767,8 @@ abstract class Campaign implements ActiveRecordInterface
         if ($this->aCampaignStatus !== null && $this->campaign_status_id !== $this->aCampaignStatus->getId()) {
             $this->aCampaignStatus = null;
         }
-        if ($this->aBalance !== null && $this->balance_id !== $this->aBalance->getId()) {
-            $this->aBalance = null;
+        if ($this->aBalanceRelatedByBalanceId !== null && $this->balance_id !== $this->aBalanceRelatedByBalanceId->getId()) {
+            $this->aBalanceRelatedByBalanceId = null;
         }
         if ($this->aActivity !== null && $this->activity_id !== $this->aActivity->getId()) {
             $this->aActivity = null;
@@ -787,9 +813,13 @@ abstract class Campaign implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCampaignStatus = null;
-            $this->aBalance = null;
+            $this->aBalanceRelatedByBalanceId = null;
             $this->aActivity = null;
             $this->collPartnerships = null;
+
+            $this->collBalancesRelatedByCampaignId = null;
+
+            $this->collCheckpoints = null;
 
         } // if (deep)
     }
@@ -902,11 +932,11 @@ abstract class Campaign implements ActiveRecordInterface
                 $this->setCampaignStatus($this->aCampaignStatus);
             }
 
-            if ($this->aBalance !== null) {
-                if ($this->aBalance->isModified() || $this->aBalance->isNew()) {
-                    $affectedRows += $this->aBalance->save($con);
+            if ($this->aBalanceRelatedByBalanceId !== null) {
+                if ($this->aBalanceRelatedByBalanceId->isModified() || $this->aBalanceRelatedByBalanceId->isNew()) {
+                    $affectedRows += $this->aBalanceRelatedByBalanceId->save($con);
                 }
-                $this->setBalance($this->aBalance);
+                $this->setBalanceRelatedByBalanceId($this->aBalanceRelatedByBalanceId);
             }
 
             if ($this->aActivity !== null) {
@@ -939,6 +969,42 @@ abstract class Campaign implements ActiveRecordInterface
 
             if ($this->collPartnerships !== null) {
                 foreach ($this->collPartnerships as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->balancesRelatedByCampaignIdScheduledForDeletion !== null) {
+                if (!$this->balancesRelatedByCampaignIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->balancesRelatedByCampaignIdScheduledForDeletion as $balanceRelatedByCampaignId) {
+                        // need to save related object because we set the relation to null
+                        $balanceRelatedByCampaignId->save($con);
+                    }
+                    $this->balancesRelatedByCampaignIdScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBalancesRelatedByCampaignId !== null) {
+                foreach ($this->collBalancesRelatedByCampaignId as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->checkpointsScheduledForDeletion !== null) {
+                if (!$this->checkpointsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->checkpointsScheduledForDeletion as $checkpoint) {
+                        // need to save related object because we set the relation to null
+                        $checkpoint->save($con);
+                    }
+                    $this->checkpointsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCheckpoints !== null) {
+                foreach ($this->collCheckpoints as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1190,7 +1256,7 @@ abstract class Campaign implements ActiveRecordInterface
 
                 $result[$key] = $this->aCampaignStatus->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aBalance) {
+            if (null !== $this->aBalanceRelatedByBalanceId) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1203,7 +1269,7 @@ abstract class Campaign implements ActiveRecordInterface
                         $key = 'Balance';
                 }
 
-                $result[$key] = $this->aBalance->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aBalanceRelatedByBalanceId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aActivity) {
 
@@ -1234,6 +1300,36 @@ abstract class Campaign implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collPartnerships->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collBalancesRelatedByCampaignId) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'balances';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'balances';
+                        break;
+                    default:
+                        $key = 'Balances';
+                }
+
+                $result[$key] = $this->collBalancesRelatedByCampaignId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collCheckpoints) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'checkpoints';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'checkpoints';
+                        break;
+                    default:
+                        $key = 'Checkpoints';
+                }
+
+                $result[$key] = $this->collCheckpoints->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1513,6 +1609,18 @@ abstract class Campaign implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getBalancesRelatedByCampaignId() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBalanceRelatedByCampaignId($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getCheckpoints() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCheckpoint($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -1601,7 +1709,7 @@ abstract class Campaign implements ActiveRecordInterface
      * @return $this|\Campaign The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setBalance(ChildBalance $v = null)
+    public function setBalanceRelatedByBalanceId(ChildBalance $v = null)
     {
         if ($v === null) {
             $this->setBalanceId(NULL);
@@ -1609,12 +1717,12 @@ abstract class Campaign implements ActiveRecordInterface
             $this->setBalanceId($v->getId());
         }
 
-        $this->aBalance = $v;
+        $this->aBalanceRelatedByBalanceId = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildBalance object, it will not be re-added.
         if ($v !== null) {
-            $v->addCampaign($this);
+            $v->addCampaignRelatedByBalanceId($this);
         }
 
 
@@ -1629,20 +1737,20 @@ abstract class Campaign implements ActiveRecordInterface
      * @return ChildBalance The associated ChildBalance object.
      * @throws PropelException
      */
-    public function getBalance(ConnectionInterface $con = null)
+    public function getBalanceRelatedByBalanceId(ConnectionInterface $con = null)
     {
-        if ($this->aBalance === null && ($this->balance_id !== null)) {
-            $this->aBalance = ChildBalanceQuery::create()->findPk($this->balance_id, $con);
+        if ($this->aBalanceRelatedByBalanceId === null && ($this->balance_id !== null)) {
+            $this->aBalanceRelatedByBalanceId = ChildBalanceQuery::create()->findPk($this->balance_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aBalance->addCampaigns($this);
+                $this->aBalanceRelatedByBalanceId->addCampaignsRelatedByBalanceId($this);
              */
         }
 
-        return $this->aBalance;
+        return $this->aBalanceRelatedByBalanceId;
     }
 
     /**
@@ -1709,6 +1817,12 @@ abstract class Campaign implements ActiveRecordInterface
     {
         if ('Partnership' == $relationName) {
             return $this->initPartnerships();
+        }
+        if ('BalanceRelatedByCampaignId' == $relationName) {
+            return $this->initBalancesRelatedByCampaignId();
+        }
+        if ('Checkpoint' == $relationName) {
+            return $this->initCheckpoints();
         }
     }
 
@@ -1981,6 +2095,442 @@ abstract class Campaign implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collBalancesRelatedByCampaignId collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBalancesRelatedByCampaignId()
+     */
+    public function clearBalancesRelatedByCampaignId()
+    {
+        $this->collBalancesRelatedByCampaignId = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBalancesRelatedByCampaignId collection loaded partially.
+     */
+    public function resetPartialBalancesRelatedByCampaignId($v = true)
+    {
+        $this->collBalancesRelatedByCampaignIdPartial = $v;
+    }
+
+    /**
+     * Initializes the collBalancesRelatedByCampaignId collection.
+     *
+     * By default this just sets the collBalancesRelatedByCampaignId collection to an empty array (like clearcollBalancesRelatedByCampaignId());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBalancesRelatedByCampaignId($overrideExisting = true)
+    {
+        if (null !== $this->collBalancesRelatedByCampaignId && !$overrideExisting) {
+            return;
+        }
+        $this->collBalancesRelatedByCampaignId = new ObjectCollection();
+        $this->collBalancesRelatedByCampaignId->setModel('\Balance');
+    }
+
+    /**
+     * Gets an array of ChildBalance objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCampaign is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBalance[] List of ChildBalance objects
+     * @throws PropelException
+     */
+    public function getBalancesRelatedByCampaignId(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBalancesRelatedByCampaignIdPartial && !$this->isNew();
+        if (null === $this->collBalancesRelatedByCampaignId || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBalancesRelatedByCampaignId) {
+                // return empty collection
+                $this->initBalancesRelatedByCampaignId();
+            } else {
+                $collBalancesRelatedByCampaignId = ChildBalanceQuery::create(null, $criteria)
+                    ->filterByCampaignRelatedByCampaignId($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBalancesRelatedByCampaignIdPartial && count($collBalancesRelatedByCampaignId)) {
+                        $this->initBalancesRelatedByCampaignId(false);
+
+                        foreach ($collBalancesRelatedByCampaignId as $obj) {
+                            if (false == $this->collBalancesRelatedByCampaignId->contains($obj)) {
+                                $this->collBalancesRelatedByCampaignId->append($obj);
+                            }
+                        }
+
+                        $this->collBalancesRelatedByCampaignIdPartial = true;
+                    }
+
+                    return $collBalancesRelatedByCampaignId;
+                }
+
+                if ($partial && $this->collBalancesRelatedByCampaignId) {
+                    foreach ($this->collBalancesRelatedByCampaignId as $obj) {
+                        if ($obj->isNew()) {
+                            $collBalancesRelatedByCampaignId[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBalancesRelatedByCampaignId = $collBalancesRelatedByCampaignId;
+                $this->collBalancesRelatedByCampaignIdPartial = false;
+            }
+        }
+
+        return $this->collBalancesRelatedByCampaignId;
+    }
+
+    /**
+     * Sets a collection of ChildBalance objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $balancesRelatedByCampaignId A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCampaign The current object (for fluent API support)
+     */
+    public function setBalancesRelatedByCampaignId(Collection $balancesRelatedByCampaignId, ConnectionInterface $con = null)
+    {
+        /** @var ChildBalance[] $balancesRelatedByCampaignIdToDelete */
+        $balancesRelatedByCampaignIdToDelete = $this->getBalancesRelatedByCampaignId(new Criteria(), $con)->diff($balancesRelatedByCampaignId);
+
+
+        $this->balancesRelatedByCampaignIdScheduledForDeletion = $balancesRelatedByCampaignIdToDelete;
+
+        foreach ($balancesRelatedByCampaignIdToDelete as $balanceRelatedByCampaignIdRemoved) {
+            $balanceRelatedByCampaignIdRemoved->setCampaignRelatedByCampaignId(null);
+        }
+
+        $this->collBalancesRelatedByCampaignId = null;
+        foreach ($balancesRelatedByCampaignId as $balanceRelatedByCampaignId) {
+            $this->addBalanceRelatedByCampaignId($balanceRelatedByCampaignId);
+        }
+
+        $this->collBalancesRelatedByCampaignId = $balancesRelatedByCampaignId;
+        $this->collBalancesRelatedByCampaignIdPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Balance objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Balance objects.
+     * @throws PropelException
+     */
+    public function countBalancesRelatedByCampaignId(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBalancesRelatedByCampaignIdPartial && !$this->isNew();
+        if (null === $this->collBalancesRelatedByCampaignId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBalancesRelatedByCampaignId) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBalancesRelatedByCampaignId());
+            }
+
+            $query = ChildBalanceQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCampaignRelatedByCampaignId($this)
+                ->count($con);
+        }
+
+        return count($this->collBalancesRelatedByCampaignId);
+    }
+
+    /**
+     * Method called to associate a ChildBalance object to this object
+     * through the ChildBalance foreign key attribute.
+     *
+     * @param  ChildBalance $l ChildBalance
+     * @return $this|\Campaign The current object (for fluent API support)
+     */
+    public function addBalanceRelatedByCampaignId(ChildBalance $l)
+    {
+        if ($this->collBalancesRelatedByCampaignId === null) {
+            $this->initBalancesRelatedByCampaignId();
+            $this->collBalancesRelatedByCampaignIdPartial = true;
+        }
+
+        if (!$this->collBalancesRelatedByCampaignId->contains($l)) {
+            $this->doAddBalanceRelatedByCampaignId($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBalance $balanceRelatedByCampaignId The ChildBalance object to add.
+     */
+    protected function doAddBalanceRelatedByCampaignId(ChildBalance $balanceRelatedByCampaignId)
+    {
+        $this->collBalancesRelatedByCampaignId[]= $balanceRelatedByCampaignId;
+        $balanceRelatedByCampaignId->setCampaignRelatedByCampaignId($this);
+    }
+
+    /**
+     * @param  ChildBalance $balanceRelatedByCampaignId The ChildBalance object to remove.
+     * @return $this|ChildCampaign The current object (for fluent API support)
+     */
+    public function removeBalanceRelatedByCampaignId(ChildBalance $balanceRelatedByCampaignId)
+    {
+        if ($this->getBalancesRelatedByCampaignId()->contains($balanceRelatedByCampaignId)) {
+            $pos = $this->collBalancesRelatedByCampaignId->search($balanceRelatedByCampaignId);
+            $this->collBalancesRelatedByCampaignId->remove($pos);
+            if (null === $this->balancesRelatedByCampaignIdScheduledForDeletion) {
+                $this->balancesRelatedByCampaignIdScheduledForDeletion = clone $this->collBalancesRelatedByCampaignId;
+                $this->balancesRelatedByCampaignIdScheduledForDeletion->clear();
+            }
+            $this->balancesRelatedByCampaignIdScheduledForDeletion[]= $balanceRelatedByCampaignId;
+            $balanceRelatedByCampaignId->setCampaignRelatedByCampaignId(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collCheckpoints collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCheckpoints()
+     */
+    public function clearCheckpoints()
+    {
+        $this->collCheckpoints = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collCheckpoints collection loaded partially.
+     */
+    public function resetPartialCheckpoints($v = true)
+    {
+        $this->collCheckpointsPartial = $v;
+    }
+
+    /**
+     * Initializes the collCheckpoints collection.
+     *
+     * By default this just sets the collCheckpoints collection to an empty array (like clearcollCheckpoints());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCheckpoints($overrideExisting = true)
+    {
+        if (null !== $this->collCheckpoints && !$overrideExisting) {
+            return;
+        }
+        $this->collCheckpoints = new ObjectCollection();
+        $this->collCheckpoints->setModel('\Checkpoint');
+    }
+
+    /**
+     * Gets an array of ChildCheckpoint objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildCampaign is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildCheckpoint[] List of ChildCheckpoint objects
+     * @throws PropelException
+     */
+    public function getCheckpoints(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCheckpointsPartial && !$this->isNew();
+        if (null === $this->collCheckpoints || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCheckpoints) {
+                // return empty collection
+                $this->initCheckpoints();
+            } else {
+                $collCheckpoints = ChildCheckpointQuery::create(null, $criteria)
+                    ->filterByCampaign($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collCheckpointsPartial && count($collCheckpoints)) {
+                        $this->initCheckpoints(false);
+
+                        foreach ($collCheckpoints as $obj) {
+                            if (false == $this->collCheckpoints->contains($obj)) {
+                                $this->collCheckpoints->append($obj);
+                            }
+                        }
+
+                        $this->collCheckpointsPartial = true;
+                    }
+
+                    return $collCheckpoints;
+                }
+
+                if ($partial && $this->collCheckpoints) {
+                    foreach ($this->collCheckpoints as $obj) {
+                        if ($obj->isNew()) {
+                            $collCheckpoints[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCheckpoints = $collCheckpoints;
+                $this->collCheckpointsPartial = false;
+            }
+        }
+
+        return $this->collCheckpoints;
+    }
+
+    /**
+     * Sets a collection of ChildCheckpoint objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $checkpoints A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildCampaign The current object (for fluent API support)
+     */
+    public function setCheckpoints(Collection $checkpoints, ConnectionInterface $con = null)
+    {
+        /** @var ChildCheckpoint[] $checkpointsToDelete */
+        $checkpointsToDelete = $this->getCheckpoints(new Criteria(), $con)->diff($checkpoints);
+
+
+        $this->checkpointsScheduledForDeletion = $checkpointsToDelete;
+
+        foreach ($checkpointsToDelete as $checkpointRemoved) {
+            $checkpointRemoved->setCampaign(null);
+        }
+
+        $this->collCheckpoints = null;
+        foreach ($checkpoints as $checkpoint) {
+            $this->addCheckpoint($checkpoint);
+        }
+
+        $this->collCheckpoints = $checkpoints;
+        $this->collCheckpointsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Checkpoint objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Checkpoint objects.
+     * @throws PropelException
+     */
+    public function countCheckpoints(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCheckpointsPartial && !$this->isNew();
+        if (null === $this->collCheckpoints || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCheckpoints) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCheckpoints());
+            }
+
+            $query = ChildCheckpointQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCampaign($this)
+                ->count($con);
+        }
+
+        return count($this->collCheckpoints);
+    }
+
+    /**
+     * Method called to associate a ChildCheckpoint object to this object
+     * through the ChildCheckpoint foreign key attribute.
+     *
+     * @param  ChildCheckpoint $l ChildCheckpoint
+     * @return $this|\Campaign The current object (for fluent API support)
+     */
+    public function addCheckpoint(ChildCheckpoint $l)
+    {
+        if ($this->collCheckpoints === null) {
+            $this->initCheckpoints();
+            $this->collCheckpointsPartial = true;
+        }
+
+        if (!$this->collCheckpoints->contains($l)) {
+            $this->doAddCheckpoint($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildCheckpoint $checkpoint The ChildCheckpoint object to add.
+     */
+    protected function doAddCheckpoint(ChildCheckpoint $checkpoint)
+    {
+        $this->collCheckpoints[]= $checkpoint;
+        $checkpoint->setCampaign($this);
+    }
+
+    /**
+     * @param  ChildCheckpoint $checkpoint The ChildCheckpoint object to remove.
+     * @return $this|ChildCampaign The current object (for fluent API support)
+     */
+    public function removeCheckpoint(ChildCheckpoint $checkpoint)
+    {
+        if ($this->getCheckpoints()->contains($checkpoint)) {
+            $pos = $this->collCheckpoints->search($checkpoint);
+            $this->collCheckpoints->remove($pos);
+            if (null === $this->checkpointsScheduledForDeletion) {
+                $this->checkpointsScheduledForDeletion = clone $this->collCheckpoints;
+                $this->checkpointsScheduledForDeletion->clear();
+            }
+            $this->checkpointsScheduledForDeletion[]= $checkpoint;
+            $checkpoint->setCampaign(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1990,8 +2540,8 @@ abstract class Campaign implements ActiveRecordInterface
         if (null !== $this->aCampaignStatus) {
             $this->aCampaignStatus->removeCampaign($this);
         }
-        if (null !== $this->aBalance) {
-            $this->aBalance->removeCampaign($this);
+        if (null !== $this->aBalanceRelatedByBalanceId) {
+            $this->aBalanceRelatedByBalanceId->removeCampaignRelatedByBalanceId($this);
         }
         if (null !== $this->aActivity) {
             $this->aActivity->removeCampaign($this);
@@ -2027,11 +2577,23 @@ abstract class Campaign implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collBalancesRelatedByCampaignId) {
+                foreach ($this->collBalancesRelatedByCampaignId as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collCheckpoints) {
+                foreach ($this->collCheckpoints as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collPartnerships = null;
+        $this->collBalancesRelatedByCampaignId = null;
+        $this->collCheckpoints = null;
         $this->aCampaignStatus = null;
-        $this->aBalance = null;
+        $this->aBalanceRelatedByBalanceId = null;
         $this->aActivity = null;
     }
 

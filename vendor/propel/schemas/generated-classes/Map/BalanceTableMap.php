@@ -59,7 +59,7 @@ class BalanceTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,12 +69,17 @@ class BalanceTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
      */
     const COL_ID = 'balance.id';
+
+    /**
+     * the column name for the campaign_id field
+     */
+    const COL_CAMPAIGN_ID = 'balance.campaign_id';
 
     /**
      * the column name for the amount field
@@ -98,11 +103,11 @@ class BalanceTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Amount', 'PaymentInfo', ),
-        self::TYPE_CAMELNAME     => array('id', 'amount', 'paymentInfo', ),
-        self::TYPE_COLNAME       => array(BalanceTableMap::COL_ID, BalanceTableMap::COL_AMOUNT, BalanceTableMap::COL_PAYMENT_INFO, ),
-        self::TYPE_FIELDNAME     => array('id', 'amount', 'payment_info', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'CampaignId', 'Amount', 'PaymentInfo', ),
+        self::TYPE_CAMELNAME     => array('id', 'campaignId', 'amount', 'paymentInfo', ),
+        self::TYPE_COLNAME       => array(BalanceTableMap::COL_ID, BalanceTableMap::COL_CAMPAIGN_ID, BalanceTableMap::COL_AMOUNT, BalanceTableMap::COL_PAYMENT_INFO, ),
+        self::TYPE_FIELDNAME     => array('id', 'campaign_id', 'amount', 'payment_info', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -112,11 +117,11 @@ class BalanceTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Amount' => 1, 'PaymentInfo' => 2, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'amount' => 1, 'paymentInfo' => 2, ),
-        self::TYPE_COLNAME       => array(BalanceTableMap::COL_ID => 0, BalanceTableMap::COL_AMOUNT => 1, BalanceTableMap::COL_PAYMENT_INFO => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'amount' => 1, 'payment_info' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'CampaignId' => 1, 'Amount' => 2, 'PaymentInfo' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'campaignId' => 1, 'amount' => 2, 'paymentInfo' => 3, ),
+        self::TYPE_COLNAME       => array(BalanceTableMap::COL_ID => 0, BalanceTableMap::COL_CAMPAIGN_ID => 1, BalanceTableMap::COL_AMOUNT => 2, BalanceTableMap::COL_PAYMENT_INFO => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'campaign_id' => 1, 'amount' => 2, 'payment_info' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -137,6 +142,7 @@ class BalanceTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addForeignKey('campaign_id', 'CampaignId', 'INTEGER', 'campaign', 'id', false, null, null);
         $this->addColumn('amount', 'Amount', 'DOUBLE', false, null, null);
         $this->addColumn('payment_info', 'PaymentInfo', 'CLOB', false, null, null);
     } // initialize()
@@ -146,13 +152,20 @@ class BalanceTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Campaign', '\\Campaign', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('CampaignRelatedByCampaignId', '\\Campaign', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':campaign_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('CampaignRelatedByBalanceId', '\\Campaign', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':balance_id',
     1 => ':id',
   ),
-), null, null, 'Campaigns', false);
+), null, null, 'CampaignsRelatedByBalanceId', false);
     } // buildRelations()
 
     /**
@@ -297,10 +310,12 @@ class BalanceTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(BalanceTableMap::COL_ID);
+            $criteria->addSelectColumn(BalanceTableMap::COL_CAMPAIGN_ID);
             $criteria->addSelectColumn(BalanceTableMap::COL_AMOUNT);
             $criteria->addSelectColumn(BalanceTableMap::COL_PAYMENT_INFO);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.campaign_id');
             $criteria->addSelectColumn($alias . '.amount');
             $criteria->addSelectColumn($alias . '.payment_info');
         }

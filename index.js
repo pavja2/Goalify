@@ -11,8 +11,7 @@ $(document).ready(function(){
     alert("authenticated");
   } else {
     // show and set up the "Sign into Dropbox" button
-    var button = document.querySelector("#signin-button");
-    button.setAttribute("class", "visible");
+    var button = document.querySelector("#signup-button");
     button.addEventListener("click", function() {
       // The user will have to click an 'Authorize' button.
       client.authenticate(function(error, client) {

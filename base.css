@@ -1,8 +1,8 @@
 body {
-	background-color: #F0F8FF;
+	background: linear-gradient(180deg, #F4E088, #F4BAB8);
 }
 h1 {
-        font-family: "Book Antiqua", Palatino, Serif;
+        font-family: Helvetica, sans-serif;
         font-variant: small-caps;
         color: #6495ED;
 	text-align: center;
@@ -11,7 +11,7 @@ h1 {
 	margin-bottom: 0px;
 }
 h2 {
-        font-family: "Book Antiqua", Palatino, Serif;
+        font-family: Helvetica, sans-serif;
         color: #008B8B;
 	text-align: center;
 	font-size: 40px;
@@ -62,13 +62,31 @@ ul#navigation li{
 	margin-right: 50px;
 }
 a {
-	color: 9370DB; 
+	color: #FFFFFF; 
 	text-decoration: none;
 }
 a:hover {
-	color: #00FFFF;
+	color: #080808;
 }
 
+boxed {
+      background-color= (76, 184, 184, 0.4);
+      border-radius: 15px;
+      margin: 0px 50px 0px 0px;
+}
+
+
+.navbar-inverse { background-color: #4CB8B8}
+.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus { background-color: #6F9292}
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.open>a,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus { background-color: #080808}
+.navbar-inverse { background-image: none; }
+.navbar-inverse { border-color: #4CB8B8}
+.navbar-inverse .navbar-brand { color: #FFFFFF}
+.navbar-inverse .navbar-brand:hover { color: #FFFFFF}
+.navbar-inverse .navbar-nav>li>a { color: #FFFFFF}
+.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus { color: #FFFFFF}
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus { color: #FFFFFF}
+.navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus { color: #FFFFFF}
 
 
 /*

@@ -18,6 +18,7 @@
 			<br>
 		</li>
 		<li>
+                        <br>
 			<h4 id = "form">Activity Description:</h4>
 			<p>Goals must be SMART: specific, measurable, attainable, relevant, and timely.</p>
 			<input type="text" name="description" placeholder="e.g., Do 10 pushups for 7 days">

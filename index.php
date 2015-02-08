@@ -9,10 +9,10 @@ require_once '/var/www/vendor/propel/schemas/generated-conf/config.php';
 $smarty = new Smarty();
 if(!isset($_COOKIE['user_id'])){
 $smarty->display('index.tpl');
-}
+} 
 else{
     $userQuery = new UserQuery();
-    $user = $userQuery->findPK(46);
+    $user = $userQuery->findPK($_COOKIE['user_id']);
     $smarty->assign('username', $user->getUsername());
     $smarty->assign('firstName', $user->getFirstName());
     $smarty->assign('lastName', $user->getLastName());

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 15:33:23
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 19:30:04
          compiled from "start_activity.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:70845598054d62d6c686c06-79760738%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '4bb38411785ced6beb4e71b497c52d9376afaf62' => 
     array (
       0 => 'start_activity.tpl',
-      1 => 1423320488,
+      1 => 1423337402,
       2 => 'file',
     ),
     'a0247d982b7bd73021f7c95bb58ae04406e88c15' => 
     array (
       0 => 'base.tpl',
-      1 => 1423323196,
+      1 => 1423336305,
       2 => 'file',
     ),
   ),
@@ -27,7 +27,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_54d62d6c6ff584_44466139')) {function content_54d62d6c6ff584_44466139($_smarty_tpl) {?><head>
 	<link rel = "stylesheet" type = "text/css" href = "base.css">
-	<h1>Goalie
+	<h1><img src="Goalify.png" src="Bet on yourself!">
 	<h2>Bet on yourself!</h2>
 	<ul id = "navigation">
 		<li><a href = my_profile.html>My Profile</a></li>
@@ -54,6 +54,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 			<br>
 		</li>
 		<li>
+                        <br>
 			<h4 id = "form">Activity Description:</h4>
 			<p>Goals must be SMART: specific, measurable, attainable, relevant, and timely.</p>
 			<input type="text" name="description" placeholder="e.g., Do 10 pushups for 7 days">

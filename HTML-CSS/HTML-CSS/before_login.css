@@ -40,14 +40,14 @@ p {
 	font-family: Helvetica, sans-serif;
 	color: #6495ED;
 	font-size: 20px;
-	margin: 0px;
+	margin: 10px;
 }
 ul li {
 	font-family: Helvetica, sans-serif;
 	color: #008B8B;
 	list-style: none;
 	font-size: 20px;
-	padding: 0px;
+	padding: 5px;
 	margin: 0px;
 }
 ol li {
@@ -55,7 +55,7 @@ ol li {
 	color: #008B8B;
 	list-style: none;
 	font-size: 20px;
-	padding: 0px;
+	padding: 5px;
 	margin: 0px;
 	}
 ul#navigation li{
