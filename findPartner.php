@@ -40,6 +40,7 @@ foreach ($userQuery as $user) {
                 $campaign->save();
                 $matchedCampaign->setCampaignStatusId(1);
                 $matchedCampaign->save();
+				break;
             } else {
                 echo "No match found.";
             }

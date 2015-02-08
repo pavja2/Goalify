@@ -4,7 +4,7 @@
     <script src="my_profile.js"></script>
 {/block}
 {block name=body}
-    <h3>Name</h3>
+    <h3>{$username}</h3>
     <div id="goal_div">
         <table id="goal_table" class="dataTable display" cellspacing="0" width="100%">
             <thead>

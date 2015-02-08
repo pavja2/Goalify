@@ -1,0 +1,42 @@
+#goal_container {
+    display: -webkit-box;   
+	display: -moz-box; 
+	display: -ms-flexbox;  
+	display: -webkit-flex;
+	display: flex;  
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+	justify-content: center;
+	-webkit-align-items: center;
+    -moz-align-items: center;
+	align-items: center;
+	-webkit-flex-wrap: wrap;
+    -moz-flex-wrap: wrap;
+    flex-wrap: wrap;
+	
+-webkit-flex-direction: row /* works with row or column */
+   flex-direction: row;
+   -webkit-align-items: center;
+   align-items: center;
+   -webkit-justify-content: center;
+   justify-content: center;
+
+}
+
+#goal_info_div {
+    width: 50%;
+	text-align: center;
+	margin-right:auto;
+	margin-left: auto;
+}
+#checkpoint_info_div{
+	width:50%;
+	align-self: center;
+	padding_top:0px;
+	margin-top: 30px;
+	border-top: 20px;
+}
+#goalheader {
+	margin-bottom: 30px;
+	font-size: 100px;
+}

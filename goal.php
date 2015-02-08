@@ -20,14 +20,8 @@ $partnership = $partnershipQuery[0];
 $checkpointQuery = CheckpointQuery::create()->filterByCampaignId($goalId)->find();
 $smarty->assign('checkpoints', $checkpointQuery);
 
-if($partnership != null){
-if($partnership->getUserId() == $_COOKIE["user_id"]){
-    $smarty->assign('partnership', $partnership);
+if(isset($_GET["partner"])){
     $smarty->display('partner_goal.tpl');
-}
-else{
-$smarty->display('goal.tpl');
-}
 }
 else{
 $smarty->display('goal.tpl');

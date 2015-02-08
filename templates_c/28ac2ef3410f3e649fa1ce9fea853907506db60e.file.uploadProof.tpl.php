@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 09:56:20
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 13:14:25
          compiled from "uploadProof.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:176103807054d71714468559-47993588%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '28ac2ef3410f3e649fa1ce9fea853907506db60e' => 
     array (
       0 => 'uploadProof.tpl',
-      1 => 1423389379,
+      1 => 1423400728,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
     array (
       0 => 'base.tpl',
-      1 => 1423379396,
+      1 => 1423393389,
       2 => 'file',
     ),
   ),
@@ -73,7 +73,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
       <ul class="nav navbar-nav">
             <li> <a href = index.php>My Profile</a></li>
-            <li><a href = initiate_activity.php>Start An Activity</a></li>
+            <li><a href = create_activity.php>Start An Activity</a></li>
             <li><a href = partnerships.php>Partnerships</a></li>
             <li><a href = log_out.php>Log Out</a></li>  
 	        </ul>
@@ -158,8 +158,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 $(function () {
     'use strict';
     // Change this to the location of your server-side upload handler:
-    var url = window.location.hostname === '//ec2-52-0-124-40.compute-1.amazonaws.com/uploadProof.php' ?
-                'UploadHandler.php' : 'UploadHandler.php';
+    var url = window.location.hostname === '//ec2-52-0-124-40.compute-1.amazonaws.com/uploadProof.php' ,
     $('#fileupload').fileupload({
         url: url,
         dataType: 'json',

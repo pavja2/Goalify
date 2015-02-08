@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 07:41:37
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 12:54:51
          compiled from "signup.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:189747239654d5c81d9cc171-14985376%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -13,7 +13,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
     array (
       0 => 'base.tpl',
-      1 => 1423379396,
+      1 => 1423393389,
       2 => 'file',
     ),
   ),
@@ -73,7 +73,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
       <ul class="nav navbar-nav">
             <li> <a href = index.php>My Profile</a></li>
-            <li><a href = initiate_activity.php>Start An Activity</a></li>
+            <li><a href = create_activity.php>Start An Activity</a></li>
             <li><a href = partnerships.php>Partnerships</a></li>
             <li><a href = log_out.php>Log Out</a></li>  
 	        </ul>

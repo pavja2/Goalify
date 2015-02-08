@@ -2,8 +2,7 @@ $(document).ready(function(){
 	
 	$("#end_date").datepicker();
 	$("#submit").click(function(){
-		
-
+	
 	$.ajax({
 		url: 'create_activity.php',
 		data: {

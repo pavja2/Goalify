@@ -6,6 +6,7 @@ require_once '/var/www/vendor/autoload.php';
 // setup Propel
 require_once '/var/www/vendor/propel/schemas/generated-conf/config.php';
 $smarty = new Smarty();
+
 if(sizeof($_GET)> 0){
 	$startDate = date($_GET['start_date']);
 	$timedate = strtotime($_GET['end_date']);
@@ -22,9 +23,6 @@ if(sizeof($_GET)> 0){
 	$campaign->setEndDate($endDate);
 	$campaign->setCampaignStatusId(2);
 	$campaign->save();
-	$curl = curl_init();
-	curl_setopt($curl, CURLOPT_URL, 'generateCheckpoints.php?start_date='.$startDate.'?end_date='.$endDate.'?campaign_di='.$campaign->getId());
-	$resp = curl_exec($curl);
 }
 else{
 $smarty->display('createActivity.tpl');

@@ -135,7 +135,7 @@ CREATE TABLE `checkpoint`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `campaign_id` INTEGER,
-    `date` DATETIME,
+    `date` DATE,
     `completed` TINYINT(1),
     PRIMARY KEY (`id`),
     INDEX `checkpoint_fi_fb800b` (`campaign_id`),

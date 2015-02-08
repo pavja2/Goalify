@@ -143,7 +143,7 @@ class CheckpointTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('campaign_id', 'CampaignId', 'INTEGER', 'campaign', 'id', false, null, null);
-        $this->addColumn('date', 'Date', 'TIMESTAMP', false, null, null);
+        $this->addColumn('date', 'Date', 'DATE', false, null, null);
         $this->addColumn('completed', 'Completed', 'BOOLEAN', false, 1, null);
     } // initialize()
 

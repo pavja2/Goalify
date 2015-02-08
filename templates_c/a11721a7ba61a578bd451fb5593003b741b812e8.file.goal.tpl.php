@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 11:15:45
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 13:36:57
          compiled from "goal.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:167454322154d649c25bc486-02348190%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a11721a7ba61a578bd451fb5593003b741b812e8' => 
     array (
       0 => 'goal.tpl',
-      1 => 1423394140,
+      1 => 1423402614,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
@@ -49,6 +49,10 @@ $_valid = $_smarty_tpl->decodeProperties(array (
  src="https://www.dropbox.com/static/api/dropbox-datastores-1.2-latest.js" type="text/javascript"><?php echo '</script'; ?>
 >
     
+<link href="goal.css" rel="stylesheet" type="text/css"/>
+<?php echo '<script'; ?>
+ src="goal.js"><?php echo '</script'; ?>
+>
 
 </head>
 <body>
@@ -83,15 +87,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 <br>
 
     
-	<div id="goal_info_div">
-            <h3><?php echo $_smarty_tpl->tpl_vars['goal']->value->getName();?>
+            <h3 id="goalheader"><?php echo $_smarty_tpl->tpl_vars['goal']->value->getName();?>
 </h3>
-            <h4>Start Date: </h4>
+<div id="goal_container">
+	<div id="goal_info_div">
+	<div id="sub_info">
+            <h4>Start Date:</h4>
             <h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getBeginDate()->format('Y-m-d');?>
-</h4>
-            <br>
-            <h4>End Date: </h4>
-            <h4><?php echo $_smarty_tpl->tpl_vars['goal']->value->getEndDate()->format('Y-m-d');?>
 </h4>
             <br>
             <h4>Campaign Status: </h4>
@@ -101,7 +103,18 @@ $_valid = $_smarty_tpl->decodeProperties(array (
             <h4>Balance: </h4>
             <h4>$<?php echo $_smarty_tpl->tpl_vars['balance']->value->getAmount();?>
 </h4>
+		</div>
         </div>
+	<div id="checkpoint_info_div" class="boxed">
+		<h1>Due Date: <?php echo $_smarty_tpl->tpl_vars['goal']->value->getEndDate()->format('Y-m-d');?>
+</h1>
+	</div>
+
+<br>
+<br>
+<br>
+<button type="button" class="btn btn-success btn-large">Mark Complete</button>
+</div>
 
 </body>
 <?php }} ?>

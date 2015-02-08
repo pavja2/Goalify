@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 11:04:06
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 13:37:03
          compiled from "partnerships.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:30646984254d6672cc27394-13112890%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f14ab5a4307b47a9643af96e5709afce9d0302fb' => 
     array (
       0 => 'partnerships.tpl',
-      1 => 1423375507,
+      1 => 1423402620,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
@@ -90,11 +90,11 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 	<table id="partner-table" class="dataTable display" cellspacing = "0" width = "100%">
 		<thead>
 			<tr>
-				<th>Partner Name</th>
-				<th>Partner Goal</th>
-				<th>Partner Start Date</th>
-				<th>Partner End Date</th>
-				<th>Partner Status</th>
+				<th>My Name</th>
+				<th>My Partner's Goal</th>
+				<th>My Partner's Start Date</th>
+				<th>My Partner's End Date</th>
+				<th>My Partner's Goal Status</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -103,8 +103,9 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 foreach ($_from as $_smarty_tpl->tpl_vars['partnership']->key => $_smarty_tpl->tpl_vars['partnership']->value) {
 $_smarty_tpl->tpl_vars['partnership']->_loop = true;
 ?>
-			<tr>
-                                <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getUserRelatedByPartnerId()->getUserName();?>
+			<tr onclick='window.document.location = "goal.php?goalId=<?php echo $_smarty_tpl->tpl_vars['partnership']->value->getCampaign()->getId();?>
+?partner=true"'>
+                                <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getUserRelatedbyPartnerId()->getUserName();?>
 </td>
                                 <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getCampaign()->getName();?>
 </td>

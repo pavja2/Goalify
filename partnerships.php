@@ -8,7 +8,7 @@ require_once '/var/www/vendor/propel/schemas/generated-conf/config.php';
 $smarty = new Smarty();
 $userQuery = new UserQuery();
 $user = $userQuery->findPK($_COOKIE['user_id']);
-$partnershipQuery = PartnershipQuery::create()->filterByUserId($user->getId())->find();
+$partnershipQuery = PartnershipQuery::create()->filterByPartnerId($user->getId())->find();
 $smarty->assign('partnerList', $partnershipQuery);
 $smarty->display('partnerships.tpl');
 ?>

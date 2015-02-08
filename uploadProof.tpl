@@ -62,8 +62,7 @@
 $(function () {
     'use strict';
     // Change this to the location of your server-side upload handler:
-    var url = window.location.hostname === '//ec2-52-0-124-40.compute-1.amazonaws.com/uploadProof.php' ?
-                'UploadHandler.php' : 'UploadHandler.php';
+    var url = window.location.hostname === '//ec2-52-0-124-40.compute-1.amazonaws.com/uploadProof.php' ,
     $('#fileupload').fileupload({
         url: url,
         dataType: 'json',
