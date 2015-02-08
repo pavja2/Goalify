@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 06:48:58
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 07:41:37
          compiled from "signup.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:189747239654d5c81d9cc171-14985376%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '6a0a5df949d4ed593cad32855f91331bbbada34e' => 
     array (
       0 => 'signup.tpl',
-      1 => 1423375280,
+      1 => 1423381295,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
     array (
       0 => 'base.tpl',
-      1 => 1423377083,
+      1 => 1423379396,
       2 => 'file',
     ),
   ),
@@ -82,6 +82,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </header>
 
 <br>
+<br>
     <h1><img src="Goalify.png" src="Bet on yourself!"></h1>
     <h2>Bet on yourself!</h2>
 <br>
@@ -94,14 +95,14 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <label for="last_name">Last Name:</label>
     <input id="last_name"></input>
     <br>
-    <label for="user_name">User Name:</label>
-    <input id="user_name"></input>
+    <label for="user_name" >User Name:</label>
+    <input id="user_name" ></input>
     <br>
     <label for="email">Email:</label>
-    <input id="email"></input>
+    <input id="email" sive="20"></input>
     <br>
     <label for="email_confirm">Confirm Email</label>
-    <input id="email_confirm"></input>
+    <input id="email_confirm" size="20"></input>
     <br>
     <button id="register-button">Complete Registration</button>
 

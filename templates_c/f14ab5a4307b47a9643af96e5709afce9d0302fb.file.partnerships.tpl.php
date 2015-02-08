@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-07 22:03:31
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 07:36:11
          compiled from "partnerships.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:30646984254d6672cc27394-13112890%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'f14ab5a4307b47a9643af96e5709afce9d0302fb' => 
     array (
       0 => 'partnerships.tpl',
-      1 => 1423345384,
+      1 => 1423375507,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
     array (
       0 => 'base.tpl',
-      1 => 1423346032,
+      1 => 1423379396,
       2 => 'file',
     ),
   ),
@@ -45,43 +45,74 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     <?php echo '<script'; ?>
  src="jquery.cookie.js" type="text/javascript"><?php echo '</script'; ?>
 >
+    <?php echo '<script'; ?>
+ src="https://www.dropbox.com/static/api/dropbox-datastores-1.2-latest.js" type="text/javascript"><?php echo '</script'; ?>
+>
     
+    <?php echo '<script'; ?>
+ src="partnerhsips.js" type="text/javascript"><?php echo '</script'; ?>
+>
 
 </head>
 <body>
+<link href='http://fonts.googleapis.com/css?family=Dosis:300' rel='stylesheet' type='text/css'>
     <link rel = "stylesheet" type = "text/css" href = "base.css">
-    <h1><img src="Goalify.png" src="Bet on yourself!"></h1>
-    <h2>Bet on yourself!</h2>
-    <nav class="navbar navbar-default navbar-static-top">
-        <ul id = "navigation">
-            <li> <a href = my_profile.php>My Profile</a></li>
+
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+            <li> <a href = index.php>My Profile</a></li>
             <li><a href = initiate_activity.php>Start An Activity</a></li>
             <li><a href = partnerships.php>Partnerships</a></li>
-            <li><a href = log_out.php>Log Out</a></li>
-        </ul>
+            <li><a href = log_out.php>Log Out</a></li>  
+	        </ul>
     </nav>
+  </div>
+</header>
+
+<br>
+<br>
+    <h1><img src="Goalify.png" src="Bet on yourself!"></h1>
+    <h2>Bet on yourself!</h2>
+<br>
+<br>
+
     
 	<h3>Partnerships</h3> 
-	<table id="partner_table" class="dataTable display" cellspacing = "0" width = "100%">
-		<thread>
+	<table id="partner-table" class="dataTable display" cellspacing = "0" width = "100%">
+		<thead>
 			<tr>
 				<th>Partner Name</th>
 				<th>Partner Goal</th>
 				<th>Partner Start Date</th>
-				<th>Parther End Date</th<?php echo '?>'; ?>
-
+				<th>Partner End Date</th>
 				<th>Partner Status</th>
 			</tr>
-		</thread>
+		</thead>
 		<tbody>
 			<?php  $_smarty_tpl->tpl_vars['partnership'] = new Smarty_Variable; $_smarty_tpl->tpl_vars['partnership']->_loop = false;
  $_from = $_smarty_tpl->tpl_vars['partnerList']->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 foreach ($_from as $_smarty_tpl->tpl_vars['partnership']->key => $_smarty_tpl->tpl_vars['partnership']->value) {
 $_smarty_tpl->tpl_vars['partnership']->_loop = true;
 ?>
-			<tr onclick = "window.document.location = 'goal.php?goalId=<?php echo $_smarty_tpl->tpl_vars['goal']->value->getId();?>
-'">
-				<td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getUserId();?>
+			<tr>
+                                <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getUserRelatedByPartnerId()->getUserName();?>
+</td>
+                                <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getCampaign()->getName();?>
+</td>
+                                <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getCampaign()->getBeginDate()->format('m/d/Y');?>
+</td>
+                                <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getCampaign()->getEndDate()->format('m/d/Y');?>
+</td>
+                                <td><?php echo $_smarty_tpl->tpl_vars['partnership']->value->getCampaign()->getCampaignStatus()->getStatus();?>
 </td>
 			</tr>
 			<?php } ?>

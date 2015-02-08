@@ -60,11 +60,24 @@
    </table>
    <table name="balance">
 		<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
+		<column name="campaign_id" type="INTEGER"/>
 		<column name="amount" type="DOUBLE"/>
 		<column name="payment_info" type="CLOB"/>
+		<foreign-key foreignTable="campaign">
+			<reference local="campaign_id" foreign="id"/>
+		</foreign-key>
    </table>
    <table name="activity">
    		<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
 		<column name="name" type="VARCHAR"/>
    </table>
+<table name="checkpoint">
+	<column name="id" primaryKey="true" required="true" autoIncrement="true" type="INTEGER"/>
+	<column name="campaign_id" type="INTEGER"/>
+	<column name="date" type="TIMESTAMP"/>
+	<column name="completed" type="BOOLEAN"/>
+	<foreign-key foreignTable="campaign">
+		<reference local="campaign_id" foreign="id"/>
+	</foreign-key>
+</table>
 </database>

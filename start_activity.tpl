@@ -12,30 +12,42 @@
 </div>
 	<ol>
 <br>
-<br>
 		<li>
 <div class="boxed">
 			<h4 id = "form">Activity Description:</h4>
 			<p>Goals must be SMART: specific, measurable, attainable, relevant, and timely.</p>
-			<input type="text" name="description" size= "80" placeholder="e.g., Do 11 pushups for 7 days">
+			<input id="description" size= "80" placeholder="e.g., Do 11 pushups for 7 days">
 <br>
 </div>
 		</li>
-<br>
 <br>
 		<li>
 <div class="boxed">
-			<h4 id="enddate">Pick Date To Accomplish Activity By:</h4>
-			<input type="date"  name="enddate">
+
+		<label for="end_date">Enter Expected Completion Date: </label>
+		<input type="date"  id="end_date"></input>
 		</li>
 </div>
 <br>
-<br>
 		<li>
+<div class="boxed">
 			<h4 id = "form">Charity:</h4>
-			<input type="radio" name="charities" value="unicef">UNICEF
-            <br>
+                        <input type="radio" name="charities" value="cancer"> American Cancer Society</input>
+<br>
+                        <input type="radio" name="charities" value="habitat"> Habitat For Humanity</input>
+<br>
+                        <input type="radio" name="charities" value="redCross"> Red Cross</input>
+<br>
+			<input type="radio" name="charities" value="unicef"> UNICEF
+</div>
 		</li>
 	</ol>
-  <button id="submit"> Submit</button>
+<div style="text-align: center;">
+  <button type="button" class="btn btn-success btn-lg" id="submit"> Submit</button>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
 {/block}

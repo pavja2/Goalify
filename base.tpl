@@ -38,6 +38,7 @@
 </header>
 
 <br>
+<br>
     <h1><img src="Goalify.png" src="Bet on yourself!"></h1>
     <h2>Bet on yourself!</h2>
 <br>

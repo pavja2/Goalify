@@ -7,11 +7,14 @@ $("#submit").click(function () {
 	data: {
 		"user_id": $.cookie("user_id"),
 		"name": $("#description").val(),
-		"begin_date": new Date(),
-		"end_date": $("#enddate").val(),
-		"campaign_status": "OPEN"
-	},
+		"end_date": $("#end_date").val()
 
+	},
+		
+	success: function(resource){
+	window.location.assign("load_balance.php");
+
+	}
 	});
 });
 });	

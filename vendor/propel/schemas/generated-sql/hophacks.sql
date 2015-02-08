@@ -102,9 +102,14 @@ DROP TABLE IF EXISTS `balance`;
 CREATE TABLE `balance`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `campaign_id` INTEGER,
     `amount` DOUBLE,
     `payment_info` LONGTEXT,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    INDEX `balance_fi_fb800b` (`campaign_id`),
+    CONSTRAINT `balance_fk_fb800b`
+        FOREIGN KEY (`campaign_id`)
+        REFERENCES `campaign` (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -118,6 +123,25 @@ CREATE TABLE `activity`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255),
     PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- checkpoint
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `checkpoint`;
+
+CREATE TABLE `checkpoint`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `campaign_id` INTEGER,
+    `date` DATETIME,
+    `completed` TINYINT(1),
+    PRIMARY KEY (`id`),
+    INDEX `checkpoint_fi_fb800b` (`campaign_id`),
+    CONSTRAINT `checkpoint_fk_fb800b`
+        FOREIGN KEY (`campaign_id`)
+        REFERENCES `campaign` (`id`)
 ) ENGINE=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier

@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 07:03:23
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2015-02-08 07:46:38
          compiled from "start_activity.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:36405789854d68623ba5f45-12162354%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '0dfd41420b5ca5070fe049096c6445689daa2044' => 
     array (
       0 => 'start_activity.tpl',
-      1 => 1423379000,
+      1 => 1423381591,
       2 => 'file',
     ),
     '8ac60285b5e343b8ef0167e47650db89cab8601a' => 
     array (
       0 => 'base.tpl',
-      1 => 1423377083,
+      1 => 1423379396,
       2 => 'file',
     ),
   ),
@@ -79,6 +79,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </header>
 
 <br>
+<br>
     <h1><img src="Goalify.png" src="Bet on yourself!"></h1>
     <h2>Bet on yourself!</h2>
 <br>
@@ -94,32 +95,44 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </div>
 	<ol>
 <br>
-<br>
 		<li>
 <div class="boxed">
 			<h4 id = "form">Activity Description:</h4>
 			<p>Goals must be SMART: specific, measurable, attainable, relevant, and timely.</p>
-			<input type="text" name="description" size= "80" placeholder="e.g., Do 11 pushups for 7 days">
+			<input id="description" size= "80" placeholder="e.g., Do 11 pushups for 7 days">
 <br>
 </div>
 		</li>
-<br>
 <br>
 		<li>
 <div class="boxed">
-			<h4 id="enddate">Pick Date To Accomplish Activity By:</h4>
-			<input type="date"  name="enddate">
+
+		<label for="end_date">Enter Expected Completion Date: </label>
+		<input type="date"  id="end_date"></input>
 		</li>
 </div>
 <br>
-<br>
 		<li>
+<div class="boxed">
 			<h4 id = "form">Charity:</h4>
-			<input type="radio" name="charities" value="unicef">UNICEF
-            <br>
+                        <input type="radio" name="charities" value="cancer"> American Cancer Society</input>
+<br>
+                        <input type="radio" name="charities" value="habitat"> Habitat For Humanity</input>
+<br>
+                        <input type="radio" name="charities" value="redCross"> Red Cross</input>
+<br>
+			<input type="radio" name="charities" value="unicef"> UNICEF
+</div>
 		</li>
 	</ol>
-  <button id="submit"> Submit</button>
+<div style="text-align: center;">
+  <button type="button" class="btn btn-success btn-lg" id="submit"> Submit</button>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 </body>
 <?php }} ?>
